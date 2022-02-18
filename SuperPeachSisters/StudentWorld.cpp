@@ -15,6 +15,10 @@ StudentWorld::StudentWorld(string assetPath)
 {
 }
 
+bool StudentWorld::overlap(int x, int y, int width, int height) {
+    
+}
+
 int StudentWorld::init()
 {
     return GWSTATUS_CONTINUE_GAME;

@@ -10,12 +10,15 @@
 class StudentWorld : public GameWorld
 {
 public:
-  StudentWorld(std::string assetPath);
-  virtual int init();
-  virtual int move();
-  virtual void cleanUp();
+    StudentWorld(std::string assetPath);
+    virtual int init();
+    virtual int move();
+    virtual void cleanUp();
+    
+    bool overlap(int x, int y, int width, int height);
 
 private:
+    
 };
 
 #endif // STUDENTWORLD_H_
