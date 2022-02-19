@@ -13,41 +13,24 @@ GameWorld* createStudentWorld(string assetPath)
 StudentWorld::StudentWorld(string assetPath)
 : GameWorld(assetPath)
 {
+    Peach *peach = new Peach(100,100,getWorld());
+    actors.push_back(*peach);
 }
 
-//bool StudentWorld::overlap(int x, int y, int width, int height) {
+//StudentWorld::~StudentWorld() {
 //    for(int i = 0; i < actors.size(); i++) {
-//        if(actors[i].actorOverlap(x, y, width, height))
-//            return &actors[i];
+//        delete actors[i];
 //    }
-//    return nullptr;
 //}
 
-//bool StudentWorld::overlap(int x, int y, int width, int height) {
-//
-//    int otherX;
-//    int otherY;
-//    int otherWidth;
-//    int otherHeight;
-//
-//    for(int i = 0; i < actors.size(); i++) {
-//
-//    }
-//
-//    int xMaxThis = x + width - 1;
-//    int yMaxThis = y + height - 1;
-//    int xMaxOther = otherX + otherWidth - 1;
-//    int yMaxOther = otherY + otherHeight - 1;
-//
-//    //if any x edge overlaps with the x edges of the other actor, and any y edge overlaps with the other y edge, there is overlap.
-//    if(((x < xMaxOther || x > otherX) || (xMaxThis < xMaxOther || xMaxThis > otherX)) &&
-//       ((y < yMaxOther || y > otherY) || (yMaxThis < yMaxOther || yMaxThis > otherY))) {
-//        return true;
-//    } else {
-//        return false;
-//    }
-//}
-//
+Actor* StudentWorld::overlap(int x, int y, int width, int height) {
+    for(int i = 0; i < actors.size(); i++) {
+        if(actors[i].actorOverlap(x, y, width, height))
+            return &actors[i];
+    }
+    return nullptr;
+}
+
 StudentWorld* StudentWorld::getWorld() {
 
     return this;

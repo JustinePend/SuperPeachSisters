@@ -2,20 +2,23 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
-#include "StudentWorld.h"
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
+class StudentWorld;
 
 class Actor : public GraphObject {
 public:
     Actor(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 0, double size = 1.0)
      : GraphObject(imageID, startX, startY, dir, depth, size), m_world(world) {
     }
+//    ~Actor() {
+//        
+//    }
     virtual bool doSomething() = 0;
     virtual void bonk() = 0;
     StudentWorld* getWorld();
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
-    bool checkOverlap();
+    bool checkBonk();
 
 private:
     StudentWorld* m_world;
@@ -43,6 +46,7 @@ public:
         setHitPoints(1);
     }
     bool doSomething();
+    void bonk();
     
 private:
     bool tempInvincibility;

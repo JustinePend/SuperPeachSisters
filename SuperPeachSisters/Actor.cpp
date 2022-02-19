@@ -32,6 +32,15 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
     }
 }
 
+bool Actor::checkBonk() {
+    Actor* object = getWorld()->overlap(getX(), getY(), SPRITE_WIDTH, SPRITE_HEIGHT);
+    if(object != nullptr) {
+        object->bonk();
+        return true;
+    }
+    return false;
+}
+
 bool Creature::isAlive() {
     
     return alive;
@@ -48,6 +57,7 @@ void Creature::setHitPoints(int val) {
     if(hitPoints <= 0)
         alive = false;
 }
+
 
 bool Peach::doSomething() {
     if(!isAlive()) {
@@ -67,19 +77,29 @@ bool Peach::doSomething() {
     if(fireTicks > 0) {
         fireTicks --;
     }
-//    Actor* object = getWorld()->overlap(getX(), getY(), SPRITE_WIDTH, SPRITE_HEIGHT);
-//    if(object != nullptr) {
-//        object->bonk();
-//    }
-    int key;
+    checkBonk();
     
+    int key;
     getWorld()->getKey(key);
-//    if(getWorld()->getKey(key)) {
-//        if(key == KEY_PRESS_LEFT) {
-//            setDirection(180);
-//            int nextX = getX() - 4;
-//
-//        }
-//    }
+    if(getWorld()->getKey(key)) {
+        if(key == KEY_PRESS_LEFT) {
+            setDirection(180);
+            int nextX = getX() - 4;
+            int bonked = checkBonk();
+            if(!bonked)
+                moveTo(nextX, getY());
+        } else if(key == KEY_PRESS_RIGHT) {
+            setDirection(0);
+            int nextX = getX() + 4;
+            int bonked = checkBonk();
+            if(!bonked)
+                moveTo(nextX, getY());
+        }
+    }
     return false;
+}
+
+void Peach::bonk() {
+    int i = 0;
+    i++;
 }
