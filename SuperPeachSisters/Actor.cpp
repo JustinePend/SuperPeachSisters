@@ -10,6 +10,76 @@
  You may add other public/private member functions and private data members to this base class, as you see fit.
  */
 
-class Actor : public GraphObject {
-    virtual void doSomething() = 0;
-};
+
+StudentWorld* Actor::getWorld() {
+    return m_world;
+}
+
+bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight) {
+    int xPos = getX();
+    int yPos = getY();
+    int xMaxThis = xPos + SPRITE_WIDTH - 1;
+    int yMaxThis = xPos + SPRITE_HEIGHT - 1;
+    int xMaxOther = otherX + otherWidth - 1;
+    int yMaxOther = otherY + otherHeight - 1;
+    
+    //if any x edge overlaps with the x edges of the other actor, and any y edge overlaps with the other y edge, there is overlap.
+    if(((xPos < xMaxOther || xPos > otherX) || (xMaxThis < xMaxOther || xMaxThis > otherX)) &&
+       ((yPos < yMaxOther || yPos > otherY) || (yMaxThis < yMaxOther || yMaxThis > otherY))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Creature::isAlive() {
+    
+    return alive;
+}
+void Creature::setAlive(bool status) {
+    alive = status;
+}
+int Creature::getHitPoints() {
+    return hitPoints;
+}
+void Creature::setHitPoints(int val) {
+
+    hitPoints = val;
+    if(hitPoints <= 0)
+        alive = false;
+}
+
+bool Peach::doSomething() {
+    if(!isAlive()) {
+        return false;
+    }
+
+    if(starPower) {
+        starTicks --;
+        if(starTicks <= 0)
+            starPower = false;
+    }
+    if(tempInvincibility) {
+        tempTicks --;
+        if(tempTicks <= 0)
+            tempInvincibility = false;
+    }
+    if(fireTicks > 0) {
+        fireTicks --;
+    }
+//    Actor* object = getWorld()->overlap(getX(), getY(), SPRITE_WIDTH, SPRITE_HEIGHT);
+//    if(object != nullptr) {
+//        object->bonk();
+//    }
+    int key;
+    
+    getWorld()->getKey(key);
+//    if(getWorld()->getKey(key)) {
+//        if(key == KEY_PRESS_LEFT) {
+//            setDirection(180);
+//            int nextX = getX() - 4;
+//
+//        }
+//    }
+    return false;
+}

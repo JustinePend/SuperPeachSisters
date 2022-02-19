@@ -4,8 +4,11 @@
 #include "GameWorld.h"
 #include "Level.h"
 #include <string>
+using namespace std;
 
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
+
+class Actor;
 
 class StudentWorld : public GameWorld
 {
@@ -15,10 +18,9 @@ public:
     virtual int move();
     virtual void cleanUp();
     
-    bool overlap(int x, int y, int width, int height);
-
+    StudentWorld* getWorld();
+//    bool overlap(int x, int y, int width, int height);
 private:
-    
+    vector<Actor> actors;
 };
-
 #endif // STUDENTWORLD_H_
