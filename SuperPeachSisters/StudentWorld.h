@@ -15,14 +15,14 @@ class StudentWorld : public GameWorld
 {
 public:
     StudentWorld(std::string assetPath);
-//    ~StudentWorld();
+    ~StudentWorld();
     virtual int init();
     virtual int move();
     virtual void cleanUp();
-    
     StudentWorld* getWorld();
     Actor* overlap(int x, int y, int width, int height);
 private:
-    vector<Actor> actors;
+    vector<Actor*> actors;
+    Level m_level;
 };
 #endif // STUDENTWORLD_H_

@@ -12,16 +12,19 @@ public:
      : GraphObject(imageID, startX, startY, dir, depth, size), m_world(world) {
     }
 //    ~Actor() {
-//        
+//
 //    }
     virtual bool doSomething() = 0;
     virtual void bonk() = 0;
     StudentWorld* getWorld();
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
     bool checkBonk();
+    bool isAlive();
+    void setAlive(bool status);
 
 private:
     StudentWorld* m_world;
+    bool alive = false;
 };
 
 class Creature : public Actor {
@@ -29,13 +32,13 @@ public:
     Creature(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 0, double size = 1.0)
     : Actor(imageID, startX, startY, world, dir, depth, size) {
         }
-    bool isAlive();
-    void setAlive(bool status);
+
+
     int getHitPoints();
     void setHitPoints(int val);
     
 private:
-    bool alive = false;
+
     int hitPoints = 0;
 };
 
@@ -45,8 +48,8 @@ public:
         setAlive(true);
         setHitPoints(1);
     }
-    bool doSomething();
-    void bonk();
+    virtual bool doSomething();
+    virtual void bonk();
     
 private:
     bool tempInvincibility;
@@ -59,14 +62,20 @@ private:
 };
 //==================================================================================//
 class Object : public Actor {
+public:
+    Object(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 2, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+
+        }
 
 };
 
-class Block : public Actor {
+class Block : public Object {
 public:
-//    void doSomething() {
-//
-//    }
+    Block(int startX, int startY, StudentWorld* world) : Object(IID_BLOCK, startX, startY, world) {
+        setAlive(true);
+    }
+    virtual bool doSomething();
+    virtual void bonk();
 };
 
 

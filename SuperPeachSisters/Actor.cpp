@@ -41,11 +41,11 @@ bool Actor::checkBonk() {
     return false;
 }
 
-bool Creature::isAlive() {
+bool Actor::isAlive() {
     
     return alive;
 }
-void Creature::setAlive(bool status) {
+void Actor::setAlive(bool status) {
     alive = status;
 }
 int Creature::getHitPoints() {
@@ -55,9 +55,8 @@ void Creature::setHitPoints(int val) {
 
     hitPoints = val;
     if(hitPoints <= 0)
-        alive = false;
+        setAlive(false);
 }
-
 
 bool Peach::doSomething() {
     if(!isAlive()) {
@@ -78,14 +77,13 @@ bool Peach::doSomething() {
         fireTicks --;
     }
     checkBonk();
-    
+
     int key;
-    getWorld()->getKey(key);
     if(getWorld()->getKey(key)) {
         if(key == KEY_PRESS_LEFT) {
             setDirection(180);
             int nextX = getX() - 4;
-            int bonked = checkBonk();
+            int bonked = checkBonk(); // pass in possible future of bonk
             if(!bonked)
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_RIGHT) {
@@ -103,3 +101,12 @@ void Peach::bonk() {
     int i = 0;
     i++;
 }
+
+bool Block::doSomething() {
+    return false;
+}
+
+void Block::bonk() {
+}
+
+
