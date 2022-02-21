@@ -36,14 +36,10 @@ StudentWorld::StudentWorld(string assetPath)
             }
         }
     }
-    
-    
 }
     
 StudentWorld::~StudentWorld() {
-    for(int i = 0; i < actors.size(); i++) {
-        delete actors[i];
-    }
+    cleanUp();
 }
 
 Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) {
@@ -86,5 +82,7 @@ int StudentWorld::move()
 
 void StudentWorld::cleanUp()
 {
-    
+    for(int i = 0; i < actors.size(); i++) {
+        delete actors[i];
+    }
 }

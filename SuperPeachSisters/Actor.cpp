@@ -46,12 +46,9 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
 bool Peach::checkBonk(int x, int y) {
     Actor* object = getWorld()->overlap(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if(object != nullptr) {
-        cout << "->>>>>>>>>>>>>> TRUE" << endl;
         object->bonk();
         return true;
     }
-    cout << "->>>>>>>>>>>>>> FALSE" << endl;
-
     return false;
 }
 
@@ -98,7 +95,6 @@ bool Peach::doSomething() {
             setDirection(180);
             int nextX = getX() - 4;
             int bonked = checkBonk(nextX, getY()); // pass in possible future of bonk
-            cout << "bonked " << bonked << endl;
             if(!bonked)
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_RIGHT) {
