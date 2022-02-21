@@ -19,9 +19,11 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
     int xPos = getX();
     int yPos = getY();
     int xMaxThis = xPos + SPRITE_WIDTH - 1;
-    int yMaxThis = xPos + SPRITE_HEIGHT - 1;
+    int yMaxThis = yPos + SPRITE_HEIGHT - 1;
     int xMaxOther = otherX + otherWidth - 1;
     int yMaxOther = otherY + otherHeight - 1;
+    
+    //peach is other
     
     //if any x edge overlaps with the x edges of the other actor, and any y edge overlaps with the other y edge, there is overlap.
 //    cout << "hello " << xPos << " " << otherX << endl;
@@ -29,13 +31,16 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
 //    cout << (xPos <= xMaxOther && xPos >= otherX) << (xMaxThis <= xMaxOther && xMaxThis >= otherX)
 //    << (yPos <= yMaxOther && yPos >= otherY) << (yMaxThis <= yMaxOther && yMaxThis >= otherY) << endl;
     
-    if(((xPos <= xMaxOther && xPos >= otherX) || (xMaxThis <= xMaxOther && xMaxThis >= otherX)) &&
-       ((yPos <= yMaxOther && yPos >= otherY) || (yMaxThis <= yMaxOther && yMaxThis >= otherY))) {
-       
-//        cout << "YEET" << endl;
+//    if(((xPos <= xMaxOther && xPos >= otherX) && (yPos <= yMaxOther && yPos >= otherY)) ||
+//       ((xMaxThis <= xMaxOther && xMaxThis >= otherX) && (yMaxThis <= yMaxOther && yMaxThis >= otherY))) {
+        
+       if(((otherX <= xMaxThis && otherX >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos))) ||
+          ((xMaxOther <= xMaxThis && xMaxOther >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos)))) {
+           
+           cout << ((otherX <= xMaxThis && otherX >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos))) << ((xMaxOther <= xMaxThis && xMaxOther >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos))) << endl;
+           cout << "i am here" << endl;
         return true;
     } else {
-//        cout << "no overlap" << endl;
         return false;
     }
 }
@@ -48,7 +53,7 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
 //    }
 //    return false;
 //}
-bool Actor::checkBonk(int x, int y) {
+bool Peach::checkBonk(int x, int y) {
     Actor* object = getWorld()->overlap(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if(object != nullptr) {
         cout << "->>>>>>>>>>>>>> TRUE" << endl;
@@ -103,6 +108,7 @@ bool Peach::doSomething() {
             setDirection(180);
             int nextX = getX() - 4;
             int bonked = checkBonk(nextX, getY()); // pass in possible future of bonk
+            cout << "bonked " << bonked << endl;
             if(!bonked)
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_RIGHT) {

@@ -26,7 +26,7 @@ StudentWorld::StudentWorld(string assetPath)
                 }
                 case Level::peach: {
                     Peach *peach = new Peach(i*SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
-                    actors.push_back(peach);
+                    m_peach = peach;
                     
                     break;
                 }
@@ -48,10 +48,12 @@ StudentWorld::~StudentWorld() {
 
 Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) {
     for(int i = 0; i < actors.size(); i++) {
-        if(actors[i]->actorOverlap(actor->getX(), actor->getY(), SPRITE_WIDTH, SPRITE_HEIGHT)) {
+
+        if(actors[i]->actorOverlap(x, y, width, height)) {
+            cerr << "peach x " << x << " peach y " << y << endl;
+
             cerr << i << " actor " << &actor << " actor[i] " << &actor[i] << endl;
-            
-            cout << "overlaps " << actor->getX() << " " << actor->getY() <<  " " << actors[i]->getX() <<  " " << actors[i]->getY() << endl;
+            cerr << "x " << actors[i]->getX() << "Y " << actors[i]->getY() << endl;
             if(&actor != &actors[i]) {
                 return actors[i];
             }
@@ -77,9 +79,12 @@ int StudentWorld::move()
     // Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
 //    decLives();
 //    return GWSTATUS_PLAYER_DIED;
+    m_peach->doSomething();
+
     for(int i = 0; i < actors.size(); i++) {
         actors[i]->doSomething();
     }
+
     return GWSTATUS_CONTINUE_GAME;
     
 }

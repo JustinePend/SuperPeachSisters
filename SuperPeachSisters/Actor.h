@@ -18,7 +18,6 @@ public:
     virtual void bonk() = 0;
     StudentWorld* getWorld();
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
-    bool checkBonk(int x, int y);
     bool isAlive();
     void setAlive(bool status);
 
@@ -48,6 +47,7 @@ public:
         setAlive(true);
         setHitPoints(1);
     }
+    bool checkBonk(int x, int y);
     virtual bool doSomething();
     virtual void bonk();
     

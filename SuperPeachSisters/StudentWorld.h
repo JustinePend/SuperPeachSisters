@@ -24,7 +24,6 @@ public:
 private:
     vector<Actor*> actors;
     Level m_level;
-    Block *testBlock;
-    Peach peach;
+    Peach* m_peach;
 };
 #endif // STUDENTWORLD_H_
