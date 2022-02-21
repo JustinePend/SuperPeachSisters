@@ -10,7 +10,6 @@
  You may add other public/private member functions and private data members to this base class, as you see fit.
  */
 
-
 StudentWorld* Actor::getWorld() {
     return m_world;
 }
@@ -26,19 +25,9 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
     //peach is other
     
     //if any x edge overlaps with the x edges of the other actor, and any y edge overlaps with the other y edge, there is overlap.
-//    cout << "hello " << xPos << " " << otherX << endl;
-//    cout << yPos << " " << otherY << endl;
-//    cout << (xPos <= xMaxOther && xPos >= otherX) << (xMaxThis <= xMaxOther && xMaxThis >= otherX)
-//    << (yPos <= yMaxOther && yPos >= otherY) << (yMaxThis <= yMaxOther && yMaxThis >= otherY) << endl;
-    
-//    if(((xPos <= xMaxOther && xPos >= otherX) && (yPos <= yMaxOther && yPos >= otherY)) ||
-//       ((xMaxThis <= xMaxOther && xMaxThis >= otherX) && (yMaxThis <= yMaxOther && yMaxThis >= otherY))) {
-        
+
        if(((otherX <= xMaxThis && otherX >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos))) ||
           ((xMaxOther <= xMaxThis && xMaxOther >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos)))) {
-           
-           cout << ((otherX <= xMaxThis && otherX >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos))) << ((xMaxOther <= xMaxThis && xMaxOther >= xPos) && ((otherY <= yMaxThis && otherY >= yPos) || (yMaxOther <= yMaxThis && yMaxOther >= yPos))) << endl;
-           cout << "i am here" << endl;
         return true;
     } else {
         return false;
@@ -53,6 +42,7 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
 //    }
 //    return false;
 //}
+
 bool Peach::checkBonk(int x, int y) {
     Actor* object = getWorld()->overlap(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if(object != nullptr) {

@@ -11,9 +11,7 @@ public:
     Actor(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 0, double size = 1.0)
      : GraphObject(imageID, startX, startY, dir, depth, size), m_world(world) {
     }
-//    ~Actor() {
-//
-//    }
+
     virtual bool doSomething() = 0;
     virtual void bonk() = 0;
     StudentWorld* getWorld();
@@ -77,7 +75,6 @@ public:
     virtual bool doSomething();
     virtual void bonk();
 };
-
 
 
 #endif // ACTOR_H_

@@ -48,12 +48,7 @@ StudentWorld::~StudentWorld() {
 
 Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) {
     for(int i = 0; i < actors.size(); i++) {
-
         if(actors[i]->actorOverlap(x, y, width, height)) {
-            cerr << "peach x " << x << " peach y " << y << endl;
-
-            cerr << i << " actor " << &actor << " actor[i] " << &actor[i] << endl;
-            cerr << "x " << actors[i]->getX() << "Y " << actors[i]->getY() << endl;
             if(&actor != &actors[i]) {
                 return actors[i];
             }
@@ -91,4 +86,5 @@ int StudentWorld::move()
 
 void StudentWorld::cleanUp()
 {
+    
 }
