@@ -20,9 +20,11 @@ public:
     virtual int move();
     virtual void cleanUp();
     StudentWorld* getWorld();
-    Actor* overlap(int x, int y, int width, int height);
+    Actor* overlap(Actor* actor, int x, int y, int width, int height);
 private:
     vector<Actor*> actors;
     Level m_level;
+    Block *testBlock;
+    Peach peach;
 };
 #endif // STUDENTWORLD_H_

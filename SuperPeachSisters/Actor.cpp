@@ -24,20 +24,39 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
     int yMaxOther = otherY + otherHeight - 1;
     
     //if any x edge overlaps with the x edges of the other actor, and any y edge overlaps with the other y edge, there is overlap.
-    if(((xPos < xMaxOther || xPos > otherX) || (xMaxThis < xMaxOther || xMaxThis > otherX)) &&
-       ((yPos < yMaxOther || yPos > otherY) || (yMaxThis < yMaxOther || yMaxThis > otherY))) {
+//    cout << "hello " << xPos << " " << otherX << endl;
+//    cout << yPos << " " << otherY << endl;
+//    cout << (xPos <= xMaxOther && xPos >= otherX) << (xMaxThis <= xMaxOther && xMaxThis >= otherX)
+//    << (yPos <= yMaxOther && yPos >= otherY) << (yMaxThis <= yMaxOther && yMaxThis >= otherY) << endl;
+    
+    if(((xPos <= xMaxOther && xPos >= otherX) || (xMaxThis <= xMaxOther && xMaxThis >= otherX)) &&
+       ((yPos <= yMaxOther && yPos >= otherY) || (yMaxThis <= yMaxOther && yMaxThis >= otherY))) {
+       
+//        cout << "YEET" << endl;
         return true;
     } else {
+//        cout << "no overlap" << endl;
         return false;
     }
 }
 
-bool Actor::checkBonk() {
-    Actor* object = getWorld()->overlap(getX(), getY(), SPRITE_WIDTH, SPRITE_HEIGHT);
+//bool Actor::checkBonk() {
+//    Actor* object = getWorld()->overlap(this);
+//    if(object != nullptr) {
+//        object->bonk();
+//        return true;
+//    }
+//    return false;
+//}
+bool Actor::checkBonk(int x, int y) {
+    Actor* object = getWorld()->overlap(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if(object != nullptr) {
+        cout << "->>>>>>>>>>>>>> TRUE" << endl;
         object->bonk();
         return true;
     }
+    cout << "->>>>>>>>>>>>>> FALSE" << endl;
+
     return false;
 }
 
@@ -76,20 +95,20 @@ bool Peach::doSomething() {
     if(fireTicks > 0) {
         fireTicks --;
     }
-    checkBonk();
+    checkBonk(getX(), getY());
 
     int key;
     if(getWorld()->getKey(key)) {
         if(key == KEY_PRESS_LEFT) {
             setDirection(180);
             int nextX = getX() - 4;
-            int bonked = checkBonk(); // pass in possible future of bonk
+            int bonked = checkBonk(nextX, getY()); // pass in possible future of bonk
             if(!bonked)
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_RIGHT) {
             setDirection(0);
             int nextX = getX() + 4;
-            int bonked = checkBonk();
+            int bonked = checkBonk(nextX, getY());
             if(!bonked)
                 moveTo(nextX, getY());
         }

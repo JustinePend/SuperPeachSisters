@@ -14,7 +14,6 @@ GameWorld* createStudentWorld(string assetPath)
 StudentWorld::StudentWorld(string assetPath)
 : GameWorld(assetPath), m_level(assetPath)
 {
-    cout << "hey" << endl;
     m_level.loadLevel("level01.txt");
     
     for(int i = 0; i< GRID_WIDTH; i++) {
@@ -28,6 +27,7 @@ StudentWorld::StudentWorld(string assetPath)
                 case Level::peach: {
                     Peach *peach = new Peach(i*SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
                     actors.push_back(peach);
+                    
                     break;
                 }
                 default: {
@@ -36,6 +36,8 @@ StudentWorld::StudentWorld(string assetPath)
             }
         }
     }
+    
+    
 }
     
 StudentWorld::~StudentWorld() {
@@ -44,12 +46,17 @@ StudentWorld::~StudentWorld() {
     }
 }
 
-Actor* StudentWorld::overlap(int x, int y, int width, int height) {
-//    for(int i = 0; i < actors.size(); i++) {
-//        cerr << " in overlap " << i << endl;
-//        if(actors[i]->actorOverlap(x, y, width, height))
-//            return actors[i];
-//    }
+Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) {
+    for(int i = 0; i < actors.size(); i++) {
+        if(actors[i]->actorOverlap(actor->getX(), actor->getY(), SPRITE_WIDTH, SPRITE_HEIGHT)) {
+            cerr << i << " actor " << &actor << " actor[i] " << &actor[i] << endl;
+            
+            cout << "overlaps " << actor->getX() << " " << actor->getY() <<  " " << actors[i]->getX() <<  " " << actors[i]->getY() << endl;
+            if(&actor != &actors[i]) {
+                return actors[i];
+            }
+        }
+    }
     return nullptr;
 }
 
