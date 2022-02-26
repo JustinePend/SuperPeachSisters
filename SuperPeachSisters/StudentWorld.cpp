@@ -54,7 +54,6 @@ Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) 
 }
 
 StudentWorld* StudentWorld::getWorld() {
-
     return this;
 }
 

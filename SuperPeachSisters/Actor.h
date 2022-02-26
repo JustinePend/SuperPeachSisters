@@ -18,7 +18,9 @@ public:
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
     bool isAlive();
     void setAlive(bool status);
-    virtual bool blocksOthers();
+    virtual bool blocksOthers() = 0;
+    virtual Actor* checkBonk(int x, int y) = 0;
+
 
 private:
     StudentWorld* m_world;
@@ -46,7 +48,7 @@ public:
         setAlive(true);
         setHitPoints(1);
     }
-    bool checkBonk(int x, int y);
+    virtual Actor* checkBonk(int x, int y);
     virtual bool doSomething();
     virtual void bonk();
     virtual bool blocksOthers();
@@ -79,6 +81,8 @@ public:
     virtual bool doSomething();
     virtual void bonk();
     virtual bool blocksOthers();
+    virtual Actor* checkBonk(int x, int y);
+
 
 };
 

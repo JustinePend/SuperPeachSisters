@@ -43,13 +43,12 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
 //    return false;
 //}
 
-bool Peach::checkBonk(int x, int y) {
+Actor* Peach::checkBonk(int x, int y) {
     Actor* object = getWorld()->overlap(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
     if(object != nullptr) {
         object->bonk();
-        return true;
     }
-    return false;
+    return object;
 }
 
 bool Actor::isAlive() {
@@ -87,7 +86,7 @@ bool Peach::doSomething() {
     if(fireTicks > 0) {
         fireTicks --;
     }
-    if(checkBonk(getX(), getY())) {
+    if(checkBonk(getX(), getY()) != nullptr) {
         bonk();
     }
     
@@ -103,7 +102,7 @@ bool Peach::doSomething() {
     if(!hasJumped) {
         bool below = false;
         for(int i = 0; i <= 3; i++) {
-            if(checkBonk(getX(), getY() - i)) {
+            if(checkBonk(getX(), getY() - i) != nullptr) {
                 below = true;
                 break;
             }
@@ -117,18 +116,18 @@ bool Peach::doSomething() {
         if(key == KEY_PRESS_LEFT) {
             setDirection(180);
             int nextX = getX() - 4;
-            int bonked = checkBonk(nextX, getY()); // pass in possible future of bonk
+            int bonked = checkBonk(nextX, getY()) != nullptr; // pass in possible future of bonk
             if(!bonked)
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_RIGHT) {
             setDirection(0);
             int nextX = getX() + 4;
-            int bonked = checkBonk(nextX, getY());
+            int bonked = checkBonk(nextX, getY()) != nullptr;
             if(!bonked)
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_UP) {
             hasJumped = true;
-            if(checkBonk(getX(), getY() - 1)) {
+            if(checkBonk(getX(), getY() - 1) != nullptr) {
                 if(!jumpPower)
                     remaining_jump_distance = 8;
                 else
@@ -157,6 +156,10 @@ void Block::bonk() {
 }
 bool Block::blocksOthers() {
     return true;
+}
+Actor* Block::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
 }
 
 
