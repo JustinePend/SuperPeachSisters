@@ -18,6 +18,7 @@ public:
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
     bool isAlive();
     void setAlive(bool status);
+    virtual bool blocksOthers();
 
 private:
     StudentWorld* m_world;
@@ -41,19 +42,22 @@ private:
 
 class Peach : public Creature {
 public:
-    Peach(int startX, int startY, StudentWorld* world) : Creature(IID_PEACH, startX, startY, world), tempInvincibility(false), starPower(false), shootPower(false), jumpPower(false), starTicks(0), tempTicks(0), fireTicks(0){
+    Peach(int startX, int startY, StudentWorld* world) : Creature(IID_PEACH, startX, startY, world), tempInvincibility(false), starPower(false), shootPower(false), jumpPower(false), hasJumped(false), remaining_jump_distance(0), starTicks(0), tempTicks(0), fireTicks(0){
         setAlive(true);
         setHitPoints(1);
     }
     bool checkBonk(int x, int y);
     virtual bool doSomething();
     virtual void bonk();
+    virtual bool blocksOthers();
     
 private:
     bool tempInvincibility;
     bool starPower;
     bool shootPower;
     bool jumpPower;
+    bool hasJumped;
+    int remaining_jump_distance;
     int starTicks;
     int tempTicks;
     int fireTicks;
@@ -74,6 +78,8 @@ public:
     }
     virtual bool doSomething();
     virtual void bonk();
+    virtual bool blocksOthers();
+
 };
 
 

@@ -87,7 +87,30 @@ bool Peach::doSomething() {
     if(fireTicks > 0) {
         fireTicks --;
     }
-    checkBonk(getX(), getY());
+    if(checkBonk(getX(), getY())) {
+        bonk();
+    }
+    
+    int targetY = getY() + 4;
+    if(!checkBonk(getX(), targetY) && remaining_jump_distance > 0 && hasJumped == true) {
+        moveTo(getX(), targetY);
+        remaining_jump_distance --;
+    } else {
+        remaining_jump_distance = 0;
+        hasJumped = false;
+    }
+    
+    if(!hasJumped) {
+        bool below = false;
+        for(int i = 0; i <= 3; i++) {
+            if(checkBonk(getX(), getY() - i)) {
+                below = true;
+                break;
+            }
+        }
+        if(!below)
+            moveTo(getX(), getY() - 4);
+    }
 
     int key;
     if(getWorld()->getKey(key)) {
@@ -103,6 +126,15 @@ bool Peach::doSomething() {
             int bonked = checkBonk(nextX, getY());
             if(!bonked)
                 moveTo(nextX, getY());
+        } else if(key == KEY_PRESS_UP) {
+            hasJumped = true;
+            if(checkBonk(getX(), getY() - 1)) {
+                if(!jumpPower)
+                    remaining_jump_distance = 8;
+                else
+                    remaining_jump_distance = 12;
+                getWorld()->playSound(SOUND_PLAYER_JUMP);
+            }
         }
     }
     return false;
@@ -113,11 +145,18 @@ void Peach::bonk() {
     i++;
 }
 
+bool Peach::blocksOthers() {
+    return false;
+}
+
 bool Block::doSomething() {
     return false;
 }
 
 void Block::bonk() {
+}
+bool Block::blocksOthers() {
+    return true;
 }
 
 
