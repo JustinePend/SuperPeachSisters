@@ -22,6 +22,8 @@ public:
     StudentWorld* getWorld();
     Actor* overlap(Actor* actor, int x, int y, int width, int height);
     void addToActors(Actor* actor);
+    void bonkAllAtPoint(Actor* actor, int x, int y, int width, int height);
+    bool checkWithBlocking(Actor* actor, int x, int y, int width, int height);
 private:
     vector<Actor*> actors;
     Level m_level;

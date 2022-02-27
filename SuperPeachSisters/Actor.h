@@ -39,6 +39,9 @@ public:
         setHitPoints(1);
     }
     virtual Actor* checkBonk(int x, int y);
+    void bonkPoint(int x, int y);
+    bool checkBlocking(int x, int y);
+    
     virtual bool doSomething();
     virtual void bonk();
     virtual bool blocksOthers();

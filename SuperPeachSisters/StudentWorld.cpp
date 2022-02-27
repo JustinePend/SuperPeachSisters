@@ -80,6 +80,27 @@ Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) 
     return nullptr;
 }
 
+void StudentWorld::bonkAllAtPoint(Actor* actor, int x, int y, int width, int height) {
+    for(int i = 0; i < actors.size(); i++) {
+        if(actors[i]->actorOverlap(x, y, width, height)) {
+            if(&actor != &actors[i]) {
+                actors[i]->bonk();
+            }
+        }
+    }
+}
+//if there is anything there that blocks, return true.
+bool StudentWorld::checkWithBlocking(Actor* actor, int x, int y, int width, int height) {
+    for(int i = 0; i < actors.size(); i++) {
+        if(actors[i]->actorOverlap(x,y, width, height) && actors[i]->blocksOthers()) {
+            if(&actor != &actors[i]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 StudentWorld* StudentWorld::getWorld() {
     return this;
 }
@@ -87,6 +108,7 @@ StudentWorld* StudentWorld::getWorld() {
 void StudentWorld::addToActors(Actor *actor) {
     actors.push_back(actor);
 }
+
 
 int StudentWorld::init()
 {

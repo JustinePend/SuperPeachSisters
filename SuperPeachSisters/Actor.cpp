@@ -47,6 +47,13 @@ Actor* Peach::checkBonk(int x, int y) {
     Actor* object = getWorld()->overlap(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
     return object;
 }
+void Peach::bonkPoint(int x, int y) {
+    getWorld()->bonkAllAtPoint(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+}
+
+bool Peach::checkBlocking(int x, int y) {
+    return getWorld()->checkWithBlocking(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+}
 
 bool Actor::isAlive() {
     
@@ -74,31 +81,23 @@ bool Peach::doSomething() {
     if(fireTicks > 0) {
         fireTicks --;
     }
-    Actor* target = checkBonk(getX(), getY());
-    if(target != nullptr) {
-        target->bonk();
-    }
+    bonkPoint(getX(), getY());
     
     int targetY = getY() + 4;
-    target = checkBonk(getX(), targetY);
-    
-    if((target == nullptr || !target->blocksOthers())&& remaining_jump_distance > 0 && hasJumped == true) {
+    //(target == nullptr || !target->blocksOthers())
+    if(!checkBlocking(getX(), targetY) && remaining_jump_distance > 0 && hasJumped == true) {
         moveTo(getX(), targetY);
         remaining_jump_distance --;
     } else {
-        if(target != nullptr)
-            target->bonk();
+        bonkPoint(getX(), targetY);
         remaining_jump_distance = 0;
         hasJumped = false;
     }
     
     if(!hasJumped) {
         bool below = false;
-        Actor* target;
-
         for(int i = 0; i <= 3; i++) {
-            target = checkBonk(getX(), getY() - i);
-            if(target != nullptr && target->blocksOthers()) {
+            if(checkBlocking(getX(), getY() - i)) {
                 below = true;
                 break;
             }
@@ -112,19 +111,16 @@ bool Peach::doSomething() {
         if(key == KEY_PRESS_LEFT) {
             setDirection(180);
             int nextX = getX() - 4;
-            Actor* target = checkBonk(nextX, getY());
-            if(target == nullptr || !target->blocksOthers())
+            if(!checkBlocking(nextX, getY()))
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_RIGHT) {
             setDirection(0);
             int nextX = getX() + 4;
-            Actor* target = checkBonk(nextX, getY());
-            if(target == nullptr || !target->blocksOthers())
+            if(!checkBlocking(nextX, getY()))
                 moveTo(nextX, getY());
         } else if(key == KEY_PRESS_UP) {
             hasJumped = true;
-            Actor* target = checkBonk(getX(), getY() - 1);
-            if(target != nullptr && target->blocksOthers()) {
+            if(checkBlocking(getX(), getY() - 1)) {
                 if(!jumpPower)
                     remaining_jump_distance = 8;
                 else
