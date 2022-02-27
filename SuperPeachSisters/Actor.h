@@ -11,16 +11,16 @@ public:
     Actor(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 0, double size = 1.0)
      : GraphObject(imageID, startX, startY, dir, depth, size), m_world(world) {
     }
-
-    virtual bool doSomething() = 0;
-    virtual void bonk() = 0;
+    virtual void doSomething() = 0;
+    virtual void bonk(Actor* actor = nullptr) = 0;
     StudentWorld* getWorld();
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
+    bool edgeOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
     
-    virtual Actor* checkBonk(int x, int y);
     void bonkPoint(int x, int y);
     bool checkBlocking(int x, int y);
     bool checkPeachOverlap();
+    bool checkEdgeOverlap(int x, int y);
     
     bool isAlive();
     void setAlive(bool status);
@@ -45,13 +45,14 @@ public:
     }
 
     
-    virtual bool doSomething();
-    virtual void bonk();
+    virtual void doSomething();
+    virtual void bonk(Actor* actor = nullptr);
     virtual bool blocksOthers();
     virtual bool isDamageable();
     int getHitPoints();
     void setHitPoints(int val);
     void setPower(int power);
+    void setTicks(int power);
     
 private:
     bool tempInvincibility;
@@ -82,9 +83,8 @@ public:
         m_goodie = goodie;
         setAlive(true);
     }
-    virtual bool doSomething();
-    virtual void bonk();
-//    virtual Actor* checkBonk(int x, int y);
+    virtual void doSomething();
+    virtual void bonk(Actor* actor = nullptr);
 private:
     int m_goodie;
 };
@@ -94,16 +94,15 @@ public:
     Pipe(int startX, int startY, StudentWorld* world) : Object(IID_PIPE, startX, startY, world) {
         setAlive(true);
     }
-    virtual bool doSomething();
-    virtual void bonk();
-//    virtual Actor* checkBonk(int x, int y);
+    virtual void doSomething();
+    virtual void bonk(Actor* actor = nullptr);
 };
 //===========================//
 class Creature: public Actor {
 public:
-    Creature(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 0, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    Creature(int imageID, int startX, int startY, StudentWorld* world, int dir = randInt(0,1) * 180, int depth = 0, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
     }
-    virtual void bonk();
+    virtual void bonk(Actor* actor = nullptr);
     virtual bool blocksOthers();
     virtual bool isDamageable();
 
@@ -114,8 +113,7 @@ public:
     Goomba(int startX, int startY, StudentWorld* world) : Creature(IID_GOOMBA, startX, startY, world) {
         setAlive(true);
     }
-    virtual bool doSomething();
-//    virtual Actor* checkBonk(int x, int y);
+    virtual void doSomething();
 };
 
 class Koopa: public Creature {
@@ -123,8 +121,7 @@ public:
     Koopa(int startX, int startY, StudentWorld* world) : Creature(IID_KOOPA, startX, startY, world) {
         setAlive(true);
     }
-    virtual bool doSomething();
-//    virtual Actor* checkBonk(int x, int y);
+    virtual void doSomething();
 };
 
 class Piranha: public Creature {
@@ -132,8 +129,7 @@ public:
     Piranha(int startX, int startY, StudentWorld* world) : Creature(IID_PIRANHA, startX, startY, world) {
         setAlive(true);
     }
-    virtual bool doSomething();
-//    virtual Actor* checkBonk(int x, int y);
+    virtual void doSomething();
 };
 //===========================//
 
@@ -143,6 +139,8 @@ public:
     }
     virtual bool blocksOthers();
     virtual bool isDamageable();
+    virtual void doSomething();
+    virtual void overlapped() = 0;
 };
 
 class Flower : public Goodie {
@@ -150,8 +148,8 @@ public:
     Flower(int startX, int startY, StudentWorld* world) : Goodie(IID_FLOWER, startX, startY, world) {
         setAlive(true);
     }
-    virtual bool doSomething();
-    virtual void bonk();
+    virtual void bonk(Actor* actor = nullptr);
+    virtual void overlapped();
 };
 
 class Mushroom : public Goodie {
@@ -159,9 +157,8 @@ public:
     Mushroom(int startX, int startY, StudentWorld* world) : Goodie(IID_MUSHROOM, startX, startY, world) {
         setAlive(true);
     }
-    virtual bool doSomething();
-    virtual void bonk();
-//    virtual Actor* checkBonk(int x, int y);
+    virtual void bonk(Actor* actor = nullptr);
+    virtual void overlapped();
 };
 
 class Star : public Goodie {
@@ -169,9 +166,8 @@ public:
     Star(int startX, int startY, StudentWorld* world) : Goodie(IID_STAR, startX, startY, world) {
         setAlive(true);
     }
-    virtual bool doSomething();
-    virtual void bonk();
-//    virtual Actor* checkBonk(int x, int y);
+    virtual void bonk(Actor* actor = nullptr);
+    virtual void overlapped();
 };
 
 //================//

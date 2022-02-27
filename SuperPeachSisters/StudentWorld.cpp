@@ -90,13 +90,37 @@ bool StudentWorld::checkWithBlocking(Actor* actor, int x, int y, int width, int 
     return false;
 }
 
+bool StudentWorld::checkEdge(Actor *actor, int x, int y, int width, int height) {
+    for(int i = 0; i < actors.size(); i++) {
+        if(actors[i]->edgeOverlap(x,y, width, height) && actors[i]->blocksOthers()) {
+            if(&actor != &actors[i]) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool StudentWorld::overlapWithPeach(Actor* actor) {
     return m_peach->actorOverlap(actor->getX(), actor->getY(), SPRITE_WIDTH, SPRITE_HEIGHT);
 }
 
+bool StudentWorld::isPeach(Actor* actor) {
+    return actor == m_peach;
+}
+
+void StudentWorld::bonkPeach() {
+    m_peach->bonk();
+}
+
 void StudentWorld::givePeachPower(int power) {
     //1 is mushroom, 2 is flower, 3 is star
-    m_peach->
+    m_peach->setHitPoints(2);
+    m_peach->setPower(power);
+}
+
+void StudentWorld::peachSetTicks(int power) {
+    m_peach->setTicks(power);
 }
 
 StudentWorld* StudentWorld::getWorld() {
@@ -116,7 +140,6 @@ int StudentWorld::init()
 
 int StudentWorld::move()
 {
-    
 //    decLives();
 //    return GWSTATUS_PLAYER_DIED;
     m_peach->doSomething();
@@ -125,8 +148,15 @@ int StudentWorld::move()
         actors[i]->doSomething();
     }
 
+    Actor* actor;
+    for(int i = 0; i < actors.size(); i++) {
+        if(!actors[i]->isAlive()) {
+            actor = actors[i];
+            actors.erase(actors.begin() + i);
+            delete actor;
+        }
+    }
     return GWSTATUS_CONTINUE_GAME;
-    
 }
 
 void StudentWorld::cleanUp()

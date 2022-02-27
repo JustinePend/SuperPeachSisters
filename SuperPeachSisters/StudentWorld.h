@@ -23,11 +23,15 @@ public:
     void addToActors(Actor* actor);
     void bonkAllAtPoint(Actor* actor, int x, int y, int width, int height);
     bool checkWithBlocking(Actor* actor, int x, int y, int width, int height);
+    bool checkEdge(Actor* actor, int x, int y, int width, int height);
     bool overlapWithPeach(Actor* actor);
+    bool isPeach(Actor* actor);
+    void bonkPeach();
     void givePeachPower(int power);
+    void peachSetTicks(int power);
 private:
     vector<Actor*> actors;
     Level m_level;
-    Actor* m_peach;
+    Peach* m_peach;
 };
 #endif // STUDENTWORLD_H_
