@@ -16,11 +16,16 @@ public:
     virtual void bonk() = 0;
     StudentWorld* getWorld();
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
+    
+    virtual Actor* checkBonk(int x, int y);
+    void bonkPoint(int x, int y);
+    bool checkBlocking(int x, int y);
+    bool checkPeachOverlap();
+    
     bool isAlive();
     void setAlive(bool status);
     virtual bool blocksOthers() = 0;
     virtual bool isDamageable() = 0;
-    virtual Actor* checkBonk(int x, int y) = 0;
 
 
 private:
@@ -38,9 +43,7 @@ public:
         setAlive(true);
         setHitPoints(1);
     }
-    virtual Actor* checkBonk(int x, int y);
-    void bonkPoint(int x, int y);
-    bool checkBlocking(int x, int y);
+
     
     virtual bool doSomething();
     virtual void bonk();
@@ -48,6 +51,7 @@ public:
     virtual bool isDamageable();
     int getHitPoints();
     void setHitPoints(int val);
+    void setPower(int power);
     
 private:
     bool tempInvincibility;
@@ -80,7 +84,7 @@ public:
     }
     virtual bool doSomething();
     virtual void bonk();
-    virtual Actor* checkBonk(int x, int y);
+//    virtual Actor* checkBonk(int x, int y);
 private:
     int m_goodie;
 };
@@ -92,7 +96,7 @@ public:
     }
     virtual bool doSomething();
     virtual void bonk();
-    virtual Actor* checkBonk(int x, int y);
+//    virtual Actor* checkBonk(int x, int y);
 };
 //===========================//
 class Creature: public Actor {
@@ -111,7 +115,7 @@ public:
         setAlive(true);
     }
     virtual bool doSomething();
-    virtual Actor* checkBonk(int x, int y);
+//    virtual Actor* checkBonk(int x, int y);
 };
 
 class Koopa: public Creature {
@@ -120,7 +124,7 @@ public:
         setAlive(true);
     }
     virtual bool doSomething();
-    virtual Actor* checkBonk(int x, int y);
+//    virtual Actor* checkBonk(int x, int y);
 };
 
 class Piranha: public Creature {
@@ -129,13 +133,13 @@ public:
         setAlive(true);
     }
     virtual bool doSomething();
-    virtual Actor* checkBonk(int x, int y);
+//    virtual Actor* checkBonk(int x, int y);
 };
 //===========================//
 
 class Goodie : public Actor {
 public:
-    Goodie(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 0, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    Goodie(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
     }
     virtual bool blocksOthers();
     virtual bool isDamageable();
@@ -148,7 +152,6 @@ public:
     }
     virtual bool doSomething();
     virtual void bonk();
-    virtual Actor* checkBonk(int x, int y);
 };
 
 class Mushroom : public Goodie {
@@ -158,7 +161,7 @@ public:
     }
     virtual bool doSomething();
     virtual void bonk();
-    virtual Actor* checkBonk(int x, int y);
+//    virtual Actor* checkBonk(int x, int y);
 };
 
 class Star : public Goodie {
@@ -168,7 +171,7 @@ public:
     }
     virtual bool doSomething();
     virtual void bonk();
-    virtual Actor* checkBonk(int x, int y);
+//    virtual Actor* checkBonk(int x, int y);
 };
 
 //================//

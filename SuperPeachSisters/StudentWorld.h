@@ -20,10 +20,11 @@ public:
     virtual int move();
     virtual void cleanUp();
     StudentWorld* getWorld();
-    Actor* overlap(Actor* actor, int x, int y, int width, int height);
     void addToActors(Actor* actor);
     void bonkAllAtPoint(Actor* actor, int x, int y, int width, int height);
     bool checkWithBlocking(Actor* actor, int x, int y, int width, int height);
+    bool overlapWithPeach(Actor* actor);
+    void givePeachPower(int power);
 private:
     vector<Actor*> actors;
     Level m_level;

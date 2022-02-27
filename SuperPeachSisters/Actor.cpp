@@ -34,27 +34,17 @@ bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight
     }
 }
 
-//bool Actor::checkBonk() {
-//    Actor* object = getWorld()->overlap(this);
-//    if(object != nullptr) {
-//        object->bonk();
-//        return true;
-//    }
-//    return false;
-//}
-
-Actor* Peach::checkBonk(int x, int y) {
-    Actor* object = getWorld()->overlap(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
-    return object;
-}
-void Peach::bonkPoint(int x, int y) {
+void Actor::bonkPoint(int x, int y) {
     getWorld()->bonkAllAtPoint(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
 }
 
-bool Peach::checkBlocking(int x, int y) {
+bool Actor::checkBlocking(int x, int y) {
     return getWorld()->checkWithBlocking(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
 }
 
+bool Actor::checkPeachOverlap() {
+    return getWorld()->overlapWithPeach(this);
+}
 bool Actor::isAlive() {
     
     return alive;
@@ -84,7 +74,6 @@ bool Peach::doSomething() {
     bonkPoint(getX(), getY());
     
     int targetY = getY() + 4;
-    //(target == nullptr || !target->blocksOthers())
     if(!checkBlocking(getX(), targetY) && remaining_jump_distance > 0 && hasJumped == true) {
         moveTo(getX(), targetY);
         remaining_jump_distance --;
@@ -155,7 +144,24 @@ void Peach::setHitPoints(int val) {
         setAlive(false);
 }
 
+void Peach::setPower(int power) {
+    //1 is mushroom, 2 is flower, 3 is star
+    if(power == 1)
+        jumpPower = true;
+    if(power == 2)
+        shootPower = true;
+    if(power == 3)
+        starPower = true;
+}
+
 //=====BLOCK=====//
+bool Object::blocksOthers() {
+    return true;
+}
+bool Object::isDamageable() {
+    return false;
+}
+
 bool Block::doSomething() {
     return false;
 }
@@ -184,17 +190,8 @@ void Block::bonk() {
         m_goodie = 0;
     }
 }
-bool Object::blocksOthers() {
-    return true;
-}
-bool Object::isDamageable() {
-    return false;
-}
 
-Actor* Block::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
+
 //===PIPE===//
 bool Pipe::doSomething() {
     return false;
@@ -202,12 +199,8 @@ bool Pipe::doSomething() {
 
 void Pipe::bonk() {
 }
-Actor* Pipe::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
 
-//==============//
+//======Goomba=======//
 
 bool Creature::blocksOthers() {
     return false;
@@ -221,28 +214,18 @@ void Creature::bonk() {
 bool Goomba::doSomething() {
     return false;
 }
-Actor* Goomba::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
 
+//======KOOPA=======//
 bool Koopa::doSomething() {
     return false;
 }
-Actor* Koopa::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
 
+//====PIRANHA====//
 bool Piranha::doSomething() {
     return false;
 }
-Actor* Piranha::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
 
-//============//
+//=====FLOWER=======//
 bool Goodie::blocksOthers() {
     return false;
 }
@@ -251,15 +234,16 @@ bool Goodie::isDamageable() {
 }
 
 bool Flower::doSomething() {
-    return false;
+    if(checkPeachOverlap()) {
+        getWorld()->increaseScore(50);
+    }
 }
+
 void Flower::bonk() {
     
 }
-Actor* Flower::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
+
+//=====MUSHROOM=======//
 
 bool Mushroom::doSomething() {
     return false;
@@ -267,20 +251,11 @@ bool Mushroom::doSomething() {
 void Mushroom::bonk() {
     
 }
-Actor* Mushroom::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
 
-
+//=====STAR=======//
 bool Star::doSomething() {
     return false;
 }
 void Star::bonk() {
     
 }
-Actor* Star::checkBonk(int x, int y) {
-    Actor* actor = nullptr;
-    return actor;
-}
-

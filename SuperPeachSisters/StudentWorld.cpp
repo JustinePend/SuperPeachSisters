@@ -69,17 +69,6 @@ StudentWorld::~StudentWorld() {
     cleanUp();
 }
 
-Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) {
-    for(int i = 0; i < actors.size(); i++) {
-        if(actors[i]->actorOverlap(x, y, width, height)) {
-            if(&actor != &actors[i]) {
-                return actors[i];
-            }
-        }
-    }
-    return nullptr;
-}
-
 void StudentWorld::bonkAllAtPoint(Actor* actor, int x, int y, int width, int height) {
     for(int i = 0; i < actors.size(); i++) {
         if(actors[i]->actorOverlap(x, y, width, height)) {
@@ -99,6 +88,15 @@ bool StudentWorld::checkWithBlocking(Actor* actor, int x, int y, int width, int 
         }
     }
     return false;
+}
+
+bool StudentWorld::overlapWithPeach(Actor* actor) {
+    return m_peach->actorOverlap(actor->getX(), actor->getY(), SPRITE_WIDTH, SPRITE_HEIGHT);
+}
+
+void StudentWorld::givePeachPower(int power) {
+    //1 is mushroom, 2 is flower, 3 is star
+    m_peach->
 }
 
 StudentWorld* StudentWorld::getWorld() {
