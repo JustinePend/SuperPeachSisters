@@ -21,9 +21,10 @@ public:
     virtual void cleanUp();
     StudentWorld* getWorld();
     Actor* overlap(Actor* actor, int x, int y, int width, int height);
+    void addToActors(Actor* actor);
 private:
     vector<Actor*> actors;
     Level m_level;
-    Peach* m_peach;
+    Actor* m_peach;
 };
 #endif // STUDENTWORLD_H_

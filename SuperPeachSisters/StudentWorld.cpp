@@ -19,20 +19,47 @@ StudentWorld::StudentWorld(string assetPath)
     for(int i = 0; i< GRID_WIDTH; i++) {
         for(int j = 0; j < GRID_HEIGHT; j++) {
             switch(m_level.getContentsOf(i,j)) {
-                case Level::block: {
-                    Block *block = new Block(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
-                    actors.push_back(block);
-                    break;
-                }
                 case Level::peach: {
                     Peach *peach = new Peach(i*SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
                     m_peach = peach;
-                    
+                    break;
+                } case Level::block: {
+                    Block *block = new Block(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld(), 0);
+                    actors.push_back(block);
+                    break;
+                } case Level::pipe: {
+                    Pipe *pipe = new Pipe(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
+                    actors.push_back(pipe);
+                    break;
+                } case Level::goomba: {
+                    Goomba *goomba = new Goomba(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
+                    actors.push_back(goomba);
+                    break;
+                } case Level::koopa: {
+                    Koopa *koopa = new Koopa(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
+                    actors.push_back(koopa);
+                    break;
+                } case Level::piranha: {
+                    Piranha *piranha = new Piranha(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
+                    actors.push_back(piranha);
+                    break;
+                } case Level::mushroom_goodie_block: {
+                    Block *block = new Block(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld(), 1);
+                    actors.push_back(block);
+                    break;
+                } case Level::flower_goodie_block: {
+                    Block *block = new Block(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld(), 2);
+                    actors.push_back(block);
+                    break;
+                } case Level::star_goodie_block: {
+                    Block *block = new Block(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld(), 3);
+                    actors.push_back(block);
                     break;
                 }
                 default: {
                     break;
                 }
+                 
             }
         }
     }
@@ -55,6 +82,10 @@ Actor* StudentWorld::overlap(Actor* actor, int x, int y, int width, int height) 
 
 StudentWorld* StudentWorld::getWorld() {
     return this;
+}
+
+void StudentWorld::addToActors(Actor *actor) {
+    actors.push_back(actor);
 }
 
 int StudentWorld::init()

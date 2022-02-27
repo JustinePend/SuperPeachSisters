@@ -58,15 +58,6 @@ bool Actor::isAlive() {
 void Actor::setAlive(bool status) {
     alive = status;
 }
-int Creature::getHitPoints() {
-    return hitPoints;
-}
-void Creature::setHitPoints(int val) {
-
-    hitPoints = val;
-    if(hitPoints <= 0)
-        setAlive(false);
-}
 
 bool Peach::doSomething() {
     if(!isAlive()) {
@@ -148,18 +139,146 @@ bool Peach::blocksOthers() {
     return false;
 }
 
+bool Peach::isDamageable() {
+    return false;
+}
+
+int Peach::getHitPoints() {
+    return hitPoints;
+}
+void Peach::setHitPoints(int val) {
+
+    hitPoints = val;
+    if(hitPoints <= 0)
+        setAlive(false);
+}
+
+//=====BLOCK=====//
 bool Block::doSomething() {
     return false;
 }
 
 void Block::bonk() {
+    if(m_goodie == 0) {
+        getWorld()->playSound(SOUND_PLAYER_BONK);
+    } else {
+        getWorld()->playSound(SOUND_POWERUP_APPEARS);
+        switch(m_goodie) {
+                //1 is mushroom, 2 is flower, 3 is star
+            case 1: {
+                Mushroom* mushroom = new Mushroom(getX(), getY() + 8, getWorld());
+                getWorld()->addToActors(mushroom);
+                break;
+            } case 2: {
+                Flower* flower = new Flower(getX(), getY() + 8, getWorld());
+                getWorld()->addToActors(flower);
+                break;
+            } case 3: {
+                Star* star = new Star(getX(), getY() + 8, getWorld());
+                getWorld()->addToActors(star);
+                break;
+            }
+        }
+        m_goodie = 0;
+    }
 }
-bool Block::blocksOthers() {
+bool Object::blocksOthers() {
     return true;
 }
+bool Object::isDamageable() {
+    return false;
+}
+
 Actor* Block::checkBonk(int x, int y) {
     Actor* actor = nullptr;
     return actor;
 }
+//===PIPE===//
+bool Pipe::doSomething() {
+    return false;
+}
 
+void Pipe::bonk() {
+}
+Actor* Pipe::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
+}
+
+//==============//
+
+bool Creature::blocksOthers() {
+    return false;
+}
+bool Creature::isDamageable() {
+    return true;
+}
+void Creature::bonk() {
+    
+}
+bool Goomba::doSomething() {
+    return false;
+}
+Actor* Goomba::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
+}
+
+bool Koopa::doSomething() {
+    return false;
+}
+Actor* Koopa::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
+}
+
+bool Piranha::doSomething() {
+    return false;
+}
+Actor* Piranha::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
+}
+
+//============//
+bool Goodie::blocksOthers() {
+    return false;
+}
+bool Goodie::isDamageable() {
+    return false;
+}
+
+bool Flower::doSomething() {
+    return false;
+}
+void Flower::bonk() {
+    
+}
+Actor* Flower::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
+}
+
+bool Mushroom::doSomething() {
+    return false;
+}
+void Mushroom::bonk() {
+    
+}
+Actor* Mushroom::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
+}
+
+
+bool Star::doSomething() {
+    return false;
+}
+void Star::bonk() {
+    
+}
+Actor* Star::checkBonk(int x, int y) {
+    Actor* actor = nullptr;
+    return actor;
+}
 
