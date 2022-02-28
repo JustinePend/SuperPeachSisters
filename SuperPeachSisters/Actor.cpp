@@ -47,6 +47,10 @@ void Actor::bonkPoint(int x, int y) {
     getWorld()->bonkAllAtPoint(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
 }
 
+bool Actor::damagePoint(int x, int y) {
+    return getWorld()->damageAllAtPoint(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
+}
+
 bool Actor::checkBlocking(int x, int y) {
     return getWorld()->checkWithBlocking(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
 }
@@ -58,7 +62,6 @@ bool Actor::checkEdgeOverlap(int x, int y) {
     return getWorld()->checkEdge(this, x, y, SPRITE_WIDTH, SPRITE_HEIGHT);
 }
 
-
 bool Actor::isAlive() {
     
     return alive;
@@ -67,28 +70,32 @@ void Actor::setAlive(bool status) {
     alive = status;
 }
 
-void Actor::damage() {
-    
-}
+void Actor::damage() {}
+
+
+//==========================================//
+//                  PEACH                   //
+//==========================================//
 
 void Peach::doSomething() {
-    if(!isAlive()) {
+    if(!isAlive())
         return;
-    }
-
+    
     if(starPower) {
         starTicks --;
         if(starTicks <= 0)
             starPower = false;
     }
+    
     if(tempInvincibility) {
         tempTicks --;
         if(tempTicks <= 0)
             tempInvincibility = false;
     }
-    if(fireTicks > 0) {
+    
+    if(fireTicks > 0)
         fireTicks --;
-    }
+    
     bonkPoint(getX(), getY());
     
     int targetY = getY() + 4;
@@ -141,11 +148,11 @@ void Peach::doSomething() {
                 
                 int nextX;
                 if(getDirection() == 0) {
-                    nextX = getX() + 4;
+                    nextX = getX() + 8;
                 } else {
-                    nextX = getX() - 4;
+                    nextX = getX() - 8;
                     }
-                Fireball* fireball = new Fireball(nextX, getY(), getWorld(), getDirection());
+                PeachFireball* fireball = new PeachFireball(nextX, getY(), getWorld(), getDirection());
                 getWorld()->addToActors(fireball);
             }
         }
@@ -201,13 +208,18 @@ void Peach::setTicks(int power) {
         starTicks = 150;
 }
 
-//=====BLOCK=====//
+//==========================================//
+//                  OBJECTS                 //
+//==========================================//
+
 bool Object::blocksOthers() {
     return true;
 }
 bool Object::isDamageable() {
     return false;
 }
+
+//=================BLOCK====================//
 
 void Block::doSomething() {
     return;
@@ -238,8 +250,8 @@ void Block::bonk(Actor* actor) {
     }
 }
 
+//=================PIPE====================//
 
-//===PIPE===//
 void Pipe::doSomething() {
     return;
 }
@@ -247,17 +259,20 @@ void Pipe::doSomething() {
 void Pipe::bonk(Actor* actor) {
 }
 
-//======Goomba=======//
+//==========================================//
+//                CREATURES                 //
+//==========================================//
 
 bool Creature::blocksOthers() {
     return false;
 }
+
 bool Creature::isDamageable() {
     return true;
 }
-void Creature::damage() {
-    
-}
+
+void Creature::damage() {}
+
 void Creature::bonk(Actor* actor) {
     if(getWorld()->isPeach(actor)) {
         if(getWorld()->getPeachPower(3)) {
@@ -266,6 +281,9 @@ void Creature::bonk(Actor* actor) {
         }
     }
 }
+
+//=================GOOMBA====================//
+
 void Goomba::damage() {
     getWorld()->increaseScore(100);
     setAlive(false);
@@ -296,7 +314,7 @@ void Goomba::doSomething() {
     moveTo(nextX, getY());
 }
 
-//======KOOPA=======//
+//=================KOOPA====================//
 void Koopa::doSomething() {
 }
 
@@ -304,14 +322,55 @@ void Koopa::damage() {
     
 }
 
-//====PIRANHA====//
+//=================PIRANHA====================//
 void Piranha::doSomething() {
 }
 
 void Piranha::damage() {
     
 }
-//=====FLOWER=======//
+//==========================================//
+//                  ITEMS                   //
+//==========================================//
+void Item::doSomething() {
+    if(target()) {
+        return;
+    }
+    
+    if(!checkBlocking(getX(), getY() - 1) || !checkBlocking(getX(), getY() - 2)) {
+        moveTo(getX(), getY() - 2);
+    }
+    int nextX;
+    if(getDirection() == 0) {
+        nextX = getX() + 2;
+        if(checkBlocking(nextX, getY())) {
+            hitWall(180);
+            return;
+        }
+    } else {
+        nextX = getX() - 2;
+        if(checkBlocking(nextX, getY())) {
+            hitWall(0);
+            return;
+        }
+    }
+    moveTo(nextX, getY());
+}
+
+bool Item::target() {
+    if(checkPeachOverlap()) {
+        overlapped();
+        setAlive(false);
+        return true;
+    }
+    else
+        return false;
+}
+
+//==========================================//
+//                 GOODIES                  //
+//==========================================//
+
 bool Goodie::blocksOthers() {
     return false;
 }
@@ -319,64 +378,56 @@ bool Goodie::isDamageable() {
     return false;
 }
 
-void Goodie::doSomething() {
-    if(checkPeachOverlap()) {
-        overlapped();
-        setAlive(false);
-        getWorld()->playSound(SOUND_PLAYER_POWERUP);
-        return;
-    }
-    if(!checkBlocking(getX(), getY() - 1) || !checkBlocking(getX(), getY() - 2)) {
-        moveTo(getX(), getY() - 2);
-    }
-    int nextX;
-    if(getDirection() == 0) {
-        nextX = getX() + 2;
-        if(checkBlocking(nextX, getY())) {
-            setDirection(180);
-            return;
-        }
-    } else {
-        nextX = getX() - 2;
-        if(checkBlocking(nextX, getY())) {
-            setDirection(0);
-            return;
-        }
-    }
-    moveTo(nextX, getY());
+void Goodie::hitWall(int dir) {
+    if(dir == 0)
+        setDirection(0);
+    else
+        setDirection(180);
 }
+
+//================FLOWER===================//
 
 void Flower::overlapped() {
     getWorld()->increaseScore(50);
     getWorld()->givePeachPower(2);
     getWorld()->peachSetTicks(2);
+    getWorld()->playSound(SOUND_PLAYER_POWERUP);
+
 }
 
 void Flower::bonk(Actor* actor) {
 }
 
-//=====MUSHROOM=======//
+//===============MUSHROOM==================//
 
 void Mushroom::overlapped() {
     getWorld()->increaseScore(75);
     getWorld()->givePeachPower(1);
+    getWorld()->playSound(SOUND_PLAYER_POWERUP);
+
 
 }
 void Mushroom::bonk(Actor* actor) {
     
 }
 
-//=====STAR=======//
+//===============STAR==================//
 void Star::overlapped() {
     getWorld()->increaseScore(100);
     getWorld()->givePeachPower(3);
     getWorld()->peachSetTicks(2);
+    getWorld()->playSound(SOUND_PLAYER_POWERUP);
+
     
 }
 void Star::bonk(Actor* actor) {
     
 }
-//====FIREBALL======/
+
+//==========================================//
+//               PROJECTILES                //
+//==========================================//
+
 
 bool Projectile::blocksOthers(){
     return false;
@@ -384,46 +435,33 @@ bool Projectile::blocksOthers(){
 bool Projectile::isDamageable(){
     return false;
 }
-
-void PeachFireball::doSomething(){
-    
+void Projectile::hitWall(int dir){
+    setAlive(false);
 }
 
+//=============PEACH FIREBALL================//
+
+bool PeachFireball::target() {
+    return damagePoint(getX(), getY());
+}
+void PeachFireball::overlapped() {
+    
+}
 void PeachFireball::bonk(Actor* actor) {
     
 }
 
-//=======PIRANHA=====//
-void Fireball::doSomething(){
-    if(checkPeachOverlap()) {
-        getWorld()->damagePeach();
-        setAlive(false);
-        return;
-    }
-    if(!checkBlocking(getX(), getY() - 1) || !checkBlocking(getX(), getY() - 2)) {
-        moveTo(getX(), getY() - 2);
-    }
-    int nextX;
-    if(getDirection() == 0) {
-        nextX = getX() + 2;
-        if(checkBlocking(nextX, getY())) {
-            return;
-        }
-    } else {
-        nextX = getX() - 2;
-        if(checkBlocking(nextX, getY())) {
-            return;
-        }
-    }
-    moveTo(nextX, getY());
+//===============FIREBALL==================//
+void Fireball::overlapped(){
+    getWorld()->damagePeach();
 }
 
 void Fireball::bonk(Actor* actor) {
     
 }
 
-//=======SHELL=======//
-void Shell::doSomething(){
+//===============SHELL==================//
+void Shell::overlapped(){
     
 }
 

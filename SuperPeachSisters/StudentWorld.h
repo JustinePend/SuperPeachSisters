@@ -22,6 +22,8 @@ public:
     StudentWorld* getWorld();
     void addToActors(Actor* actor);
     void bonkAllAtPoint(Actor* actor, int x, int y, int width, int height);
+    bool damageAllAtPoint(Actor* actor, int x, int y, int width, int height);
+
     bool checkWithBlocking(Actor* actor, int x, int y, int width, int height);
     bool checkEdge(Actor* actor, int x, int y, int width, int height);
     bool overlapWithPeach(Actor* actor);

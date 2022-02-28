@@ -18,6 +18,8 @@ public:
     bool edgeOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
     
     void bonkPoint(int x, int y);
+    bool damagePoint(int x, int y);
+
     bool checkBlocking(int x, int y);
     bool checkPeachOverlap();
     bool checkEdgeOverlap(int x, int y);
@@ -141,15 +143,26 @@ public:
 
 };
 //===========================//
-
-class Goodie : public Actor {
+class Item : public Actor {
 public:
-    Goodie(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    Item(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    }
+    virtual void doSomething();
+    virtual void overlapped() = 0;
+    virtual void hitWall(int dir) = 0;
+    virtual bool target();
+};
+
+
+class Goodie : public Item {
+public:
+    Goodie(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Item(imageID, startX, startY, world, dir, depth, size) {
     }
     virtual bool blocksOthers();
     virtual bool isDamageable();
-    virtual void doSomething();
     virtual void overlapped() = 0;
+    virtual void hitWall(int dir);
+
 };
 
 class Flower : public Goodie {
@@ -181,12 +194,15 @@ public:
 
 //================//
 
-class Projectile : public Actor {
+class Projectile : public Item {
 public:
-    Projectile(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    Projectile(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Item(imageID, startX, startY, world, dir, depth, size) {
     }
     virtual bool blocksOthers();
     virtual bool isDamageable();
+    virtual void overlapped() = 0;
+    virtual void hitWall(int dir = 0);
+
 
 };
 
@@ -195,8 +211,9 @@ public:
     Fireball(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_PIRANHA_FIRE, startX, startY, world, dir) {
         setAlive(true);
     }
-    virtual void doSomething();
     virtual void bonk(Actor* actor = nullptr);
+    virtual void overlapped();
+
     
 };
 
@@ -205,8 +222,10 @@ public:
     PeachFireball(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_PEACH_FIRE, startX, startY, world, dir) {
         setAlive(true);
     }
-    virtual void doSomething();
     virtual void bonk(Actor* actor = nullptr);
+    virtual void overlapped();
+    virtual bool target();
+
 };
 
 class Shell: public Projectile {
@@ -214,8 +233,9 @@ public:
     Shell(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_SHELL, startX, startY, world, dir) {
         setAlive(true);
     }
-    virtual void doSomething();
     virtual void bonk(Actor* actor = nullptr);
+    virtual void overlapped();
+
     
 };
 

@@ -79,6 +79,19 @@ void StudentWorld::bonkAllAtPoint(Actor* actor, int x, int y, int width, int hei
     }
 }
 //if there is anything there that blocks, return true.
+bool StudentWorld::damageAllAtPoint(Actor* actor, int x, int y, int width, int height) {
+    bool damaged = false;
+    for(int i = 0; i < actors.size(); i++) {
+        if(actors[i]->actorOverlap(x,y, width, height) && actors[i]->isDamageable()) {
+            if(&actor != &actors[i]) {
+                actors[i]->damage();
+                damaged = true;
+            }
+        }
+    }
+    return damaged;
+}
+
 bool StudentWorld::checkWithBlocking(Actor* actor, int x, int y, int width, int height) {
     for(int i = 0; i < actors.size(); i++) {
         if(actors[i]->actorOverlap(x,y, width, height) && actors[i]->blocksOthers()) {
