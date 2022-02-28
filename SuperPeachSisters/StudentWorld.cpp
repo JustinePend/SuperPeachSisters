@@ -2,6 +2,8 @@
 #include "GameConstants.h"
 #include "Level.h"
 #include <string>
+#include <iostream>
+#include <sstream>
 using namespace std;
 
 GameWorld* createStudentWorld(string assetPath)
@@ -14,13 +16,22 @@ GameWorld* createStudentWorld(string assetPath)
 StudentWorld::StudentWorld(string assetPath)
 : GameWorld(assetPath), m_level(assetPath)
 {
-    
+    levelActive = true;
+    gameActive = true;
+    level = 1;
 }
     
 StudentWorld::~StudentWorld() {
     cleanUp();
 }
 
+void StudentWorld::levelDone() {
+    levelActive = false;
+}
+
+void StudentWorld::gameDone() {
+    gameActive = false;
+}
 void StudentWorld::bonkAllAtPoint(Actor* actor, int x, int y, int width, int height) {
     for(int i = 0; i < actors.size(); i++) {
         if(actors[i]->actorOverlap(x, y, width, height)) {
@@ -116,8 +127,12 @@ void StudentWorld::addToActors(Actor *actor) {
 
 int StudentWorld::init()
 {
+    levelActive = true;
     
-    m_level.loadLevel("level01.txt");
+    ostringstream oss;
+    oss << setw(2) <<setfill('0') << getLevel();
+    string lv = "level" + oss.str() + ".txt";
+    m_level.loadLevel(lv);
     
     for(int i = 0; i< GRID_WIDTH; i++) {
         for(int j = 0; j < GRID_HEIGHT; j++) {
@@ -158,6 +173,10 @@ int StudentWorld::init()
                     Block *block = new Block(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld(), 3);
                     actors.push_back(block);
                     break;
+                } case Level::flag: {
+                    Flag *flag = new Flag(i * SPRITE_WIDTH, j*SPRITE_HEIGHT, getWorld());
+                    actors.push_back(flag);
+                    break;
                 }
                 default: {
                     break;
@@ -179,12 +198,35 @@ int StudentWorld::move()
     for(int i = 0; i < actors.size(); i++) {
         actors[i]->doSomething();
     }
+    ostringstream oss;
+    oss << "Lives: " << getLives() << "  Level: " << level << " Points: " << getScore();
+    if(m_peach->getPower(3))
+        oss << " StarPower!";
+    if(m_peach->getPower(2))
+        oss << " ShootPower!";
+    if(m_peach->getPower(1))
+        oss << " JumpPower!";
+    
+    string text = oss.str();
+    setGameStatText(text);
     
     if(!m_peach->isAlive()) {
         playSound(SOUND_PLAYER_DIE);
         decLives();
         return GWSTATUS_PLAYER_DIED;
     }
+    
+    if(!levelActive) {
+        playSound(SOUND_FINISHED_LEVEL);
+        level++;
+        return GWSTATUS_FINISHED_LEVEL;
+    }
+    
+    if(!gameActive) {
+        playSound(SOUND_GAME_OVER);
+        return GWSTATUS_PLAYER_WON;
+    }
+    
 
     Actor* actor;
     for(int i = 0; i < actors.size(); i++) {

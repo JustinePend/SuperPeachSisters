@@ -21,12 +21,15 @@ public:
     virtual void cleanUp();
     StudentWorld* getWorld();
     void addToActors(Actor* actor);
+    void levelDone();
+    void gameDone();
+    
     void bonkAllAtPoint(Actor* actor, int x, int y, int width, int height);
     bool damageAllAtPoint(Actor* actor, int x, int y, int width, int height);
-
     bool checkWithBlocking(Actor* actor, int x, int y, int width, int height);
     bool checkEdge(Actor* actor, int x, int y, int width, int height);
     bool overlapWithPeach(Actor* actor);
+    
     bool isPeach(Actor* actor);
     int getPeachPower(int power);
     int getPeachX();
@@ -39,5 +42,8 @@ private:
     vector<Actor*> actors;
     Level m_level;
     Peach* m_peach;
+    bool levelActive;
+    bool gameActive;
+    int level;
 };
 #endif // STUDENTWORLD_H_

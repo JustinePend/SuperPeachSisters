@@ -206,8 +206,6 @@ public:
     virtual bool isDamageable();
     virtual void overlapped() = 0;
     virtual void hitWall(int dir = 0);
-
-
 };
 
 class Fireball: public Projectile {
@@ -217,8 +215,6 @@ public:
     }
     virtual void bonk(Actor* actor = nullptr);
     virtual void overlapped();
-
-    
 };
 
 class PeachFireball: public Projectile {
@@ -240,9 +236,35 @@ public:
     virtual void bonk(Actor* actor = nullptr);
     virtual void overlapped();
     virtual bool target();
-
-
-    
 };
+//================//
+
+class LevelEnder: public Actor {
+public:
+    LevelEnder(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    }
+    virtual bool blocksOthers();
+    virtual bool isDamageable();
+    virtual void doSomething();
+    virtual void bonk(Actor* actor = nullptr);
+    virtual void levelOrWin() = 0;
+};
+
+class Flag: public LevelEnder {
+public:
+    Flag(int startX, int startY, StudentWorld* world) : LevelEnder(IID_FLAG, startX, startY, world) {
+        setAlive(true);
+    }
+    virtual void levelOrWin();
+};
+
+class Mario: public LevelEnder {
+    Mario(int startX, int startY, StudentWorld* world) : LevelEnder(IID_MARIO, startX, startY, world) {
+        setAlive(true);
+    }
+    virtual void levelOrWin();
+
+};
+
 
 #endif // ACTOR_H_

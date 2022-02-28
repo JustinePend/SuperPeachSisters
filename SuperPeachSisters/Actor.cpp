@@ -362,7 +362,7 @@ void Piranha::creatureAction() {
     } else {
         int diff = getWorld()->getPeachX() - getX();
         int sign = (diff < 0)? -1 : 1;
-        if(sign * diff < 8 * SPRITE_WIDTH) {
+        if(sign * diff < 8 * SPRITE_WIDTH && level) {
             Fireball* pFireball =  new Fireball(getX(), getY(), getWorld(), getDirection());
             getWorld()->addToActors(pFireball);
             getWorld()->playSound(SOUND_PIRANHA_FIRE);
@@ -520,4 +520,37 @@ void Shell::overlapped(){
 
 void Shell::bonk(Actor* actor) {
     
+}
+
+//==========================================//
+//               LEVEL ENDER                //
+//==========================================//
+
+
+bool LevelEnder::blocksOthers() {
+    return false;
+}
+
+bool LevelEnder::isDamageable() {
+    return false;
+}
+
+void LevelEnder::doSomething() {
+    if(!isAlive())
+        return;
+    if(checkPeachOverlap()) {
+        getWorld()->increaseScore(1000);
+        setAlive(false);
+        getWorld()->levelDone();
+    }
+}
+
+void LevelEnder::bonk(Actor* actor) {}
+
+void Flag::levelOrWin() {
+    getWorld()->levelDone();
+}
+
+void Mario::levelOrWin() {
+    getWorld()->levelDone();
 }
