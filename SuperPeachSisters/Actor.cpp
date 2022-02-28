@@ -67,6 +67,10 @@ void Actor::setAlive(bool status) {
     alive = status;
 }
 
+void Actor::damage() {
+    
+}
+
 void Peach::doSomething() {
     if(!isAlive()) {
         return;
@@ -130,6 +134,12 @@ void Peach::doSomething() {
                     remaining_jump_distance = 12;
                 getWorld()->playSound(SOUND_PLAYER_JUMP);
             }
+        } else if(key == KEY_PRESS_SPACE) {
+            if(shootPower && fireTicks <= 0) {
+                getWorld()->playSound(SOUND_PLAYER_FIRE);
+                fireTicks = 8;
+                
+            }
         }
     }
     return;
@@ -166,6 +176,16 @@ void Peach::setPower(int power) {
         shootPower = true;
     if(power == 3)
         starPower = true;
+}
+
+int Peach::getPower(int power) {
+    if(power == 1)
+        return jumpPower;
+    if(power == 2)
+        return shootPower;
+    if(power == 3)
+        return starPower;
+    return 0;
 }
 
 void Peach::setTicks(int power) {
@@ -227,8 +247,20 @@ bool Creature::blocksOthers() {
 bool Creature::isDamageable() {
     return true;
 }
+void Creature::damage() {
+    
+}
 void Creature::bonk(Actor* actor) {
-
+    if(getWorld()->isPeach(actor)) {
+        if(getWorld()->getPeachPower(3)) {
+            getWorld()->playSound(SOUND_PLAYER_KICK);
+            damage();
+        }
+    }
+}
+void Goomba::damage() {
+    getWorld()->increaseScore(100);
+    setAlive(false);
 }
 void Goomba::doSomething() {
     if(!isAlive())
@@ -260,10 +292,17 @@ void Goomba::doSomething() {
 void Koopa::doSomething() {
 }
 
+void Koopa::damage() {
+    
+}
+
 //====PIRANHA====//
 void Piranha::doSomething() {
 }
 
+void Piranha::damage() {
+    
+}
 //=====FLOWER=======//
 bool Goodie::blocksOthers() {
     return false;

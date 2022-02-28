@@ -26,6 +26,7 @@ public:
     bool checkEdge(Actor* actor, int x, int y, int width, int height);
     bool overlapWithPeach(Actor* actor);
     bool isPeach(Actor* actor);
+    int getPeachPower(int power);
     void bonkPeach();
     void givePeachPower(int power);
     void peachSetTicks(int power);

@@ -26,6 +26,7 @@ public:
     void setAlive(bool status);
     virtual bool blocksOthers() = 0;
     virtual bool isDamageable() = 0;
+    virtual void damage();
 
 
 private:
@@ -52,6 +53,7 @@ public:
     int getHitPoints();
     void setHitPoints(int val);
     void setPower(int power);
+    int getPower(int power);
     void setTicks(int power);
     
 private:
@@ -105,7 +107,9 @@ public:
     virtual void bonk(Actor* actor = nullptr);
     virtual bool blocksOthers();
     virtual bool isDamageable();
+    virtual void damage();
 
+    
 };
 
 class Goomba: public Creature {
@@ -114,6 +118,7 @@ public:
         setAlive(true);
     }
     virtual void doSomething();
+    virtual void damage();
 };
 
 class Koopa: public Creature {
@@ -122,6 +127,8 @@ public:
         setAlive(true);
     }
     virtual void doSomething();
+    virtual void damage();
+
 };
 
 class Piranha: public Creature {
@@ -130,6 +137,8 @@ public:
         setAlive(true);
     }
     virtual void doSomething();
+    virtual void damage();
+
 };
 //===========================//
 
@@ -171,45 +180,42 @@ public:
 };
 
 //================//
-//
-//class Projectile : public Actor {
-//public:
-//    Projectile(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 2, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
-//    }
-//    virtual bool doSomething();
-//    virtual void bonk();
-//    virtual bool blocksOthers();
-//    virtual Actor* checkBonk(int x, int y);
-//};
-//
-//class Fireball: public Projectile {
-//    Fireball(int startX, int startY, StudentWorld* world) : Projectile(IID_PIRANHA_FIRE, startX, startY, world) {
-//        setAlive(true);
-//    }
-//    virtual bool doSomething();
-//    virtual void bonk();
-//    virtual bool blocksOthers();
-//    virtual Actor* checkBonk(int x, int y);
-//};
-//
-//class PeachFireball: public Projectile {
-//    PeachFireball(int startX, int startY, StudentWorld* world) : Projectile(IID_PEACH_FIRE, startX, startY, world) {
-//        setAlive(true);
-//    }
-//    virtual bool doSomething();
-//    virtual void bonk();
-//    virtual bool blocksOthers();
-//    virtual Actor* checkBonk(int x, int y);
-//};
-//
-//class Shell: public Projectile {
-//    Shell(int startX, int startY, StudentWorld* world) : Projectile(IID_SHELL, startX, startY, world) {
-//        setAlive(true);
-//    }
-//    virtual bool doSomething();
-//    virtual void bonk();
-//    virtual bool blocksOthers();
-//    virtual Actor* checkBonk(int x, int y);
-//};
+
+class Projectile : public Actor {
+public:
+    Projectile(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 2, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    }
+    virtual void doSomething();
+    virtual void bonk();
+    virtual bool blocksOthers();
+};
+
+class Fireball: public Projectile {
+    Fireball(int startX, int startY, StudentWorld* world) : Projectile(IID_PIRANHA_FIRE, startX, startY, world) {
+        setAlive(true);
+    }
+    virtual void doSomething();
+    virtual void bonk();
+    virtual bool blocksOthers();
+};
+
+class PeachFireball: public Projectile {
+    PeachFireball(int startX, int startY, StudentWorld* world) : Projectile(IID_PEACH_FIRE, startX, startY, world) {
+        setAlive(true);
+    }
+    virtual void doSomething();
+    virtual void bonk();
+    virtual bool blocksOthers();
+};
+
+class Shell: public Projectile {
+    Shell(int startX, int startY, StudentWorld* world) : Projectile(IID_SHELL, startX, startY, world) {
+        setAlive(true);
+    }
+    virtual void doSomething();
+    virtual void bonk();
+    virtual bool blocksOthers();
+    
+};
 
 #endif // ACTOR_H_

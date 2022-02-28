@@ -73,7 +73,7 @@ void StudentWorld::bonkAllAtPoint(Actor* actor, int x, int y, int width, int hei
     for(int i = 0; i < actors.size(); i++) {
         if(actors[i]->actorOverlap(x, y, width, height)) {
             if(&actor != &actors[i]) {
-                actors[i]->bonk();
+                actors[i]->bonk(actor);
             }
         }
     }
@@ -107,6 +107,10 @@ bool StudentWorld::overlapWithPeach(Actor* actor) {
 
 bool StudentWorld::isPeach(Actor* actor) {
     return actor == m_peach;
+}
+
+int StudentWorld::getPeachPower(int power) {
+    return m_peach->getPower(power);
 }
 
 void StudentWorld::bonkPeach() {
