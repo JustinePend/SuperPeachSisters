@@ -37,7 +37,7 @@ bool Actor::edgeOverlap(int otherX, int otherY, int otherWidth, int otherHeight)
     int xMaxThis = xPos + SPRITE_WIDTH - 1;
     int xMaxOther = otherX + otherWidth - 1;
     
-    if((xMaxOther > xMaxThis && !checkBlocking(otherX + 8, otherY - 8)) || (otherX < xPos && !checkBlocking(otherX - 8, otherY - 8)))
+    if((xMaxOther > xMaxThis && !checkBlocking(otherX + 7, otherY - 7)) || (otherX < xPos && !checkBlocking(otherX - 7, otherY - 7)))
         return true;
     else
        return false;
@@ -161,16 +161,31 @@ void Peach::doSomething() {
 }
 
 void Peach::bonk(Actor* actor) {
-    int i = 0;
-    i++;
+    if(starPower || tempInvincibility)
+        return;
+    setHitPoints(getHitPoints()-1);
+    tempInvincibility = true;
+    tempTicks = 10;
+    shootPower = false;
+    jumpPower = false;
+    if(getHitPoints() >= 1)
+        getWorld()->playSound(SOUND_PLAYER_HURT);
+    else {
+        setAlive(false);
+    }
 }
+
+void Peach::damage() {
+    bonk();
+}
+
 
 bool Peach::blocksOthers() {
     return false;
 }
 
 bool Peach::isDamageable() {
-    return false;
+    return true;
 }
 
 int Peach::getHitPoints() {
@@ -272,6 +287,7 @@ bool Creature::isDamageable() {
 }
 
 void Creature::damage() {}
+void Creature::increaseAnimation(){}
 
 void Creature::bonk(Actor* actor) {
     if(getWorld()->isPeach(actor)) {
@@ -282,20 +298,7 @@ void Creature::bonk(Actor* actor) {
     }
 }
 
-//=================GOOMBA====================//
-
-void Goomba::damage() {
-    getWorld()->increaseScore(100);
-    setAlive(false);
-}
-void Goomba::doSomething() {
-    if(!isAlive())
-        return;
-    if(checkPeachOverlap()) {
-        getWorld()->bonkPeach();
-        return;
-    }
-    
+void Creature::creatureAction() {
     int nextX;
     if(getDirection() == 0) {
         nextX = getX() + 1;
@@ -310,24 +313,70 @@ void Goomba::doSomething() {
             return;
         }
     }
-        
     moveTo(nextX, getY());
 }
 
-//=================KOOPA====================//
-void Koopa::doSomething() {
+void Creature::doSomething() {
+    if(!isAlive())
+        return;
+    if(checkPeachOverlap()) {
+        getWorld()->bonkPeach();
+        return;
+    }
+    
+    creatureAction();
 }
+
+//=================GOOMBA====================//
+
+void Goomba::damage() {
+    getWorld()->increaseScore(100);
+    setAlive(false);
+}
+
+
+//=================KOOPA====================//
 
 void Koopa::damage() {
-    
+    getWorld()->increaseScore(100);
+    setAlive(false);
+    Shell* shell = new Shell(getX(), getY(), getWorld(), getDirection());
+    getWorld()->addToActors(shell);
 }
 
+
 //=================PIRANHA====================//
-void Piranha::doSomething() {
+void Piranha::creatureAction() {
+    bool level = false;
+    if(getWorld()->getPeachY() <  getY() * 1.5 && getWorld()->getPeachY() > getY() * 0.5) {
+        level = true;
+    }
+    if(getWorld()->getPeachX() < getX())
+        setDirection(180);
+    else
+        setDirection(0);
+    
+    if(fireDelay > 0) {
+        fireDelay --;
+        return;
+    } else {
+        int diff = getWorld()->getPeachX() - getX();
+        int sign = (diff < 0)? -1 : 1;
+        if(sign * diff < 8 * SPRITE_WIDTH) {
+            Fireball* pFireball =  new Fireball(getX(), getY(), getWorld(), getDirection());
+            getWorld()->addToActors(pFireball);
+            getWorld()->playSound(SOUND_PIRANHA_FIRE);
+            fireDelay = 40;
+        }
+    }
+}
+void Piranha::increaseAnimation(){
+    increaseAnimationNumber();
 }
 
 void Piranha::damage() {
-    
+    getWorld()->increaseScore(100);
+    setAlive(false);
 }
 //==========================================//
 //                  ITEMS                   //
@@ -439,6 +488,15 @@ void Projectile::hitWall(int dir){
     setAlive(false);
 }
 
+//===============FIREBALL==================//
+void Fireball::overlapped(){
+    getWorld()->damagePeach();
+}
+
+void Fireball::bonk(Actor* actor) {
+    
+}
+
 //=============PEACH FIREBALL================//
 
 bool PeachFireball::target() {
@@ -451,16 +509,11 @@ void PeachFireball::bonk(Actor* actor) {
     
 }
 
-//===============FIREBALL==================//
-void Fireball::overlapped(){
-    getWorld()->damagePeach();
-}
-
-void Fireball::bonk(Actor* actor) {
-    
-}
-
 //===============SHELL==================//
+bool Shell::target() {
+    return damagePoint(getX(), getY());
+}
+
 void Shell::overlapped(){
     
 }

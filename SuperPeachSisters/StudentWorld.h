@@ -29,6 +29,8 @@ public:
     bool overlapWithPeach(Actor* actor);
     bool isPeach(Actor* actor);
     int getPeachPower(int power);
+    int getPeachX();
+    int getPeachY();
     void bonkPeach();
     void damagePeach();
     void givePeachPower(int power);

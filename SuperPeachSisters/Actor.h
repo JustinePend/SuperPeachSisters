@@ -52,6 +52,7 @@ public:
     virtual void bonk(Actor* actor = nullptr);
     virtual bool blocksOthers();
     virtual bool isDamageable();
+    virtual void damage();
     int getHitPoints();
     void setHitPoints(int val);
     void setPower(int power);
@@ -110,7 +111,9 @@ public:
     virtual bool blocksOthers();
     virtual bool isDamageable();
     virtual void damage();
-
+    virtual void doSomething();
+    virtual void increaseAnimation();
+    virtual void creatureAction();
     
 };
 
@@ -119,7 +122,6 @@ public:
     Goomba(int startX, int startY, StudentWorld* world) : Creature(IID_GOOMBA, startX, startY, world) {
         setAlive(true);
     }
-    virtual void doSomething();
     virtual void damage();
 };
 
@@ -128,19 +130,21 @@ public:
     Koopa(int startX, int startY, StudentWorld* world) : Creature(IID_KOOPA, startX, startY, world) {
         setAlive(true);
     }
-    virtual void doSomething();
     virtual void damage();
 
 };
 
 class Piranha: public Creature {
 public:
-    Piranha(int startX, int startY, StudentWorld* world) : Creature(IID_PIRANHA, startX, startY, world) {
+    Piranha(int startX, int startY, StudentWorld* world) : Creature(IID_PIRANHA, startX, startY, world), fireDelay(0) {
         setAlive(true);
     }
-    virtual void doSomething();
     virtual void damage();
+    virtual void increaseAnimation();
+    virtual void creatureAction();
 
+private:
+    int fireDelay;
 };
 //===========================//
 class Item : public Actor {
@@ -235,6 +239,8 @@ public:
     }
     virtual void bonk(Actor* actor = nullptr);
     virtual void overlapped();
+    virtual bool target();
+
 
     
 };
