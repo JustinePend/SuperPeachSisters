@@ -183,38 +183,39 @@ public:
 
 class Projectile : public Actor {
 public:
-    Projectile(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 2, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
+    Projectile(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
     }
-    virtual void doSomething();
-    virtual void bonk();
     virtual bool blocksOthers();
+    virtual bool isDamageable();
+
 };
 
 class Fireball: public Projectile {
-    Fireball(int startX, int startY, StudentWorld* world) : Projectile(IID_PIRANHA_FIRE, startX, startY, world) {
+public:
+    Fireball(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_PIRANHA_FIRE, startX, startY, world, dir) {
         setAlive(true);
     }
     virtual void doSomething();
-    virtual void bonk();
-    virtual bool blocksOthers();
+    virtual void bonk(Actor* actor = nullptr);
+    
 };
 
 class PeachFireball: public Projectile {
-    PeachFireball(int startX, int startY, StudentWorld* world) : Projectile(IID_PEACH_FIRE, startX, startY, world) {
+public:
+    PeachFireball(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_PEACH_FIRE, startX, startY, world, dir) {
         setAlive(true);
     }
     virtual void doSomething();
-    virtual void bonk();
-    virtual bool blocksOthers();
+    virtual void bonk(Actor* actor = nullptr);
 };
 
 class Shell: public Projectile {
-    Shell(int startX, int startY, StudentWorld* world) : Projectile(IID_SHELL, startX, startY, world) {
+public:
+    Shell(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_SHELL, startX, startY, world, dir) {
         setAlive(true);
     }
     virtual void doSomething();
-    virtual void bonk();
-    virtual bool blocksOthers();
+    virtual void bonk(Actor* actor = nullptr);
     
 };
 

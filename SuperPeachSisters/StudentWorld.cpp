@@ -117,6 +117,10 @@ void StudentWorld::bonkPeach() {
     m_peach->bonk();
 }
 
+void StudentWorld::damagePeach() {
+    m_peach->damage();
+}
+
 void StudentWorld::givePeachPower(int power) {
     //1 is mushroom, 2 is flower, 3 is star
     m_peach->setHitPoints(2);

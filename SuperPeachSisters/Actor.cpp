@@ -139,6 +139,14 @@ void Peach::doSomething() {
                 getWorld()->playSound(SOUND_PLAYER_FIRE);
                 fireTicks = 8;
                 
+                int nextX;
+                if(getDirection() == 0) {
+                    nextX = getX() + 4;
+                } else {
+                    nextX = getX() - 4;
+                    }
+                Fireball* fireball = new Fireball(nextX, getY(), getWorld(), getDirection());
+                getWorld()->addToActors(fireball);
             }
         }
     }
@@ -366,5 +374,59 @@ void Star::overlapped() {
     
 }
 void Star::bonk(Actor* actor) {
+    
+}
+//====FIREBALL======/
+
+bool Projectile::blocksOthers(){
+    return false;
+}
+bool Projectile::isDamageable(){
+    return false;
+}
+
+void PeachFireball::doSomething(){
+    
+}
+
+void PeachFireball::bonk(Actor* actor) {
+    
+}
+
+//=======PIRANHA=====//
+void Fireball::doSomething(){
+    if(checkPeachOverlap()) {
+        getWorld()->damagePeach();
+        setAlive(false);
+        return;
+    }
+    if(!checkBlocking(getX(), getY() - 1) || !checkBlocking(getX(), getY() - 2)) {
+        moveTo(getX(), getY() - 2);
+    }
+    int nextX;
+    if(getDirection() == 0) {
+        nextX = getX() + 2;
+        if(checkBlocking(nextX, getY())) {
+            return;
+        }
+    } else {
+        nextX = getX() - 2;
+        if(checkBlocking(nextX, getY())) {
+            return;
+        }
+    }
+    moveTo(nextX, getY());
+}
+
+void Fireball::bonk(Actor* actor) {
+    
+}
+
+//=======SHELL=======//
+void Shell::doSomething(){
+    
+}
+
+void Shell::bonk(Actor* actor) {
     
 }

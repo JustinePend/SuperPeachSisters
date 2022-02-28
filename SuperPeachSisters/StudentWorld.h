@@ -28,6 +28,7 @@ public:
     bool isPeach(Actor* actor);
     int getPeachPower(int power);
     void bonkPeach();
+    void damagePeach();
     void givePeachPower(int power);
     void peachSetTicks(int power);
 private:
