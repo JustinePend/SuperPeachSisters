@@ -12,7 +12,7 @@ public:
      : GraphObject(imageID, startX, startY, dir, depth, size), m_world(world) {
     }
     virtual void doSomething() = 0;
-    virtual void bonk(Actor* actor = nullptr) = 0;
+    virtual void bonk(Actor* actor = nullptr);
     StudentWorld* getWorld();
     bool actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
     bool edgeOverlap(int otherX, int otherY, int otherWidth, int otherHeight);
@@ -79,6 +79,7 @@ public:
         }
     virtual bool isDamageable();
     virtual bool blocksOthers();
+    virtual void doSomething();
 
 };
 
@@ -88,7 +89,6 @@ public:
         m_goodie = goodie;
         setAlive(true);
     }
-    virtual void doSomething();
     virtual void bonk(Actor* actor = nullptr);
 private:
     int m_goodie;
@@ -99,8 +99,6 @@ public:
     Pipe(int startX, int startY, StudentWorld* world) : Object(IID_PIPE, startX, startY, world) {
         setAlive(true);
     }
-    virtual void doSomething();
-    virtual void bonk(Actor* actor = nullptr);
 };
 //===========================//
 class Creature: public Actor {
@@ -110,8 +108,9 @@ public:
     virtual void bonk(Actor* actor = nullptr);
     virtual bool blocksOthers();
     virtual bool isDamageable();
-    virtual void damage();
+    virtual void damage() = 0;
     virtual void doSomething();
+private:
     virtual void increaseAnimation();
     virtual void creatureAction();
     
@@ -140,6 +139,7 @@ public:
         setAlive(true);
     }
     virtual void damage();
+private:
     virtual void increaseAnimation();
     virtual void creatureAction();
 
@@ -152,6 +152,7 @@ public:
     Item(int imageID, int startX, int startY, StudentWorld* world, int dir = 0, int depth = 1, double size = 1.0) : Actor(imageID, startX, startY, world, dir, depth, size) {
     }
     virtual void doSomething();
+private:
     virtual void overlapped() = 0;
     virtual void hitWall(int dir) = 0;
     virtual bool target();
@@ -164,6 +165,7 @@ public:
     }
     virtual bool blocksOthers();
     virtual bool isDamageable();
+private:
     virtual void overlapped() = 0;
     virtual void hitWall(int dir);
 
@@ -174,7 +176,7 @@ public:
     Flower(int startX, int startY, StudentWorld* world) : Goodie(IID_FLOWER, startX, startY, world) {
         setAlive(true);
     }
-    virtual void bonk(Actor* actor = nullptr);
+private:
     virtual void overlapped();
 };
 
@@ -183,7 +185,7 @@ public:
     Mushroom(int startX, int startY, StudentWorld* world) : Goodie(IID_MUSHROOM, startX, startY, world) {
         setAlive(true);
     }
-    virtual void bonk(Actor* actor = nullptr);
+private:
     virtual void overlapped();
 };
 
@@ -192,7 +194,7 @@ public:
     Star(int startX, int startY, StudentWorld* world) : Goodie(IID_STAR, startX, startY, world) {
         setAlive(true);
     }
-    virtual void bonk(Actor* actor = nullptr);
+private:
     virtual void overlapped();
 };
 
@@ -204,6 +206,7 @@ public:
     }
     virtual bool blocksOthers();
     virtual bool isDamageable();
+private:
     virtual void overlapped() = 0;
     virtual void hitWall(int dir = 0);
 };
@@ -213,7 +216,7 @@ public:
     Fireball(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_PIRANHA_FIRE, startX, startY, world, dir) {
         setAlive(true);
     }
-    virtual void bonk(Actor* actor = nullptr);
+private:
     virtual void overlapped();
 };
 
@@ -222,7 +225,7 @@ public:
     PeachFireball(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_PEACH_FIRE, startX, startY, world, dir) {
         setAlive(true);
     }
-    virtual void bonk(Actor* actor = nullptr);
+private:
     virtual void overlapped();
     virtual bool target();
 
@@ -233,7 +236,7 @@ public:
     Shell(int startX, int startY, StudentWorld* world, int dir) : Projectile(IID_SHELL, startX, startY, world, dir) {
         setAlive(true);
     }
-    virtual void bonk(Actor* actor = nullptr);
+private:
     virtual void overlapped();
     virtual bool target();
 };
@@ -246,7 +249,7 @@ public:
     virtual bool blocksOthers();
     virtual bool isDamageable();
     virtual void doSomething();
-    virtual void bonk(Actor* actor = nullptr);
+private:
     virtual void levelOrWin() = 0;
 };
 
@@ -255,6 +258,7 @@ public:
     Flag(int startX, int startY, StudentWorld* world) : LevelEnder(IID_FLAG, startX, startY, world) {
         setAlive(true);
     }
+private:
     virtual void levelOrWin();
 };
 
@@ -262,6 +266,7 @@ class Mario: public LevelEnder {
     Mario(int startX, int startY, StudentWorld* world) : LevelEnder(IID_MARIO, startX, startY, world) {
         setAlive(true);
     }
+private:
     virtual void levelOrWin();
 
 };

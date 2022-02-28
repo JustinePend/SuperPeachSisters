@@ -14,6 +14,9 @@ StudentWorld* Actor::getWorld() {
     return m_world;
 }
 
+void Actor::bonk(Actor* actor) {
+}
+
 bool Actor::actorOverlap(int otherX, int otherY, int otherWidth, int otherHeight) {
     int xPos = getX();
     int yPos = getY();
@@ -233,12 +236,11 @@ bool Object::blocksOthers() {
 bool Object::isDamageable() {
     return false;
 }
+void Object::doSomething() {
+}
 
 //=================BLOCK====================//
 
-void Block::doSomething() {
-    return;
-}
 
 void Block::bonk(Actor* actor) {
     if(m_goodie == 0) {
@@ -267,12 +269,7 @@ void Block::bonk(Actor* actor) {
 
 //=================PIPE====================//
 
-void Pipe::doSomething() {
-    return;
-}
 
-void Pipe::bonk(Actor* actor) {
-}
 
 //==========================================//
 //                CREATURES                 //
@@ -286,7 +283,6 @@ bool Creature::isDamageable() {
     return true;
 }
 
-void Creature::damage() {}
 void Creature::increaseAnimation(){}
 
 void Creature::bonk(Actor* actor) {
@@ -444,9 +440,6 @@ void Flower::overlapped() {
 
 }
 
-void Flower::bonk(Actor* actor) {
-}
-
 //===============MUSHROOM==================//
 
 void Mushroom::overlapped() {
@@ -456,9 +449,6 @@ void Mushroom::overlapped() {
 
 
 }
-void Mushroom::bonk(Actor* actor) {
-    
-}
 
 //===============STAR==================//
 void Star::overlapped() {
@@ -467,9 +457,6 @@ void Star::overlapped() {
     getWorld()->peachSetTicks(2);
     getWorld()->playSound(SOUND_PLAYER_POWERUP);
 
-    
-}
-void Star::bonk(Actor* actor) {
     
 }
 
@@ -493,9 +480,6 @@ void Fireball::overlapped(){
     getWorld()->damagePeach();
 }
 
-void Fireball::bonk(Actor* actor) {
-    
-}
 
 //=============PEACH FIREBALL================//
 
@@ -505,9 +489,7 @@ bool PeachFireball::target() {
 void PeachFireball::overlapped() {
     
 }
-void PeachFireball::bonk(Actor* actor) {
-    
-}
+
 
 //===============SHELL==================//
 bool Shell::target() {
@@ -518,9 +500,6 @@ void Shell::overlapped(){
     
 }
 
-void Shell::bonk(Actor* actor) {
-    
-}
 
 //==========================================//
 //               LEVEL ENDER                //
@@ -545,7 +524,6 @@ void LevelEnder::doSomething() {
     }
 }
 
-void LevelEnder::bonk(Actor* actor) {}
 
 void Flag::levelOrWin() {
     getWorld()->levelDone();
